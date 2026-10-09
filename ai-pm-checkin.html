@@ -162,23 +162,27 @@
     background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff;
     display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; letter-spacing:1px;
     box-shadow:0 8px 22px rgba(46,91,255,.35);}
-  .auth-card h2{font-size:20px; margin-bottom:4px;}
-  .auth-sub{font-size:13px; color:var(--sub); margin-bottom:20px;}
-  .auth-tabs{display:flex; background:#eef3ff; border-radius:12px; padding:4px; margin-bottom:18px;}
+  .auth-card h2{font-size:20px; margin-bottom:14px;}
+  /* v11.11：切换 tab 置顶后与下方邮箱输入框之间留出空隙 */
+  .auth-tabs{display:flex; background:#eef3ff; border-radius:12px; padding:4px; margin-top:16px; margin-bottom:12px;}
   .auth-tab{flex:1; border:none; background:transparent; padding:9px 0; border-radius:9px; font-size:14px;
     color:var(--sub); cursor:pointer; transition:all .18s; font-weight:600;}
   .auth-tab.on{background:var(--card); color:var(--brand); font-weight:700; box-shadow:0 2px 8px rgba(46,91,255,.16);}
   .auth-input{width:100%; border:1.5px solid var(--line); border-radius:12px; padding:12px 14px; font-size:14px;
     margin-bottom:12px; outline:none; transition:border-color .18s; background:#fbfcff; color:var(--ink);}
   .auth-input:focus{border-color:var(--brand2); background:#fff;}
-  #authVcodeRow{display:none; display:none; flex-direction:row; align-items:center;}
+  /* v11.20：验证码输入框与「获取验证码」按钮同一水平线——
+     stretch 让按钮与输入框等高（按钮文字默认垂直居中），去掉按钮的 margin-bottom 消除偏移 */
+  #authVcodeRow{display:none; flex-direction:row; align-items:stretch; flex-wrap:nowrap;}
   .auth-btn-send{flex:none; border:1.5px solid var(--brand2); color:var(--brand); background:#f0f4ff;
-    border-radius:12px; padding:12px 12px; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap;
-    transition:all .18s; margin-bottom:12px;}
+    border-radius:12px; padding:0 12px; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap;
+    transition:all .18s;}
   .auth-btn-send:hover{background:var(--brand2); color:#fff;}
   .auth-btn-send:disabled{opacity:.55; cursor:not-allowed;}
   .auth-msg{font-size:12.5px; color:var(--ok); min-height:18px; margin-bottom:8px; font-weight:600;}
   .auth-msg.err{color:var(--bad);}
+  /* v11.10：表单项用 flex + order 按模式排序（切换 tab 在最上方）——注册：切换→邮箱→密码→确认→验证码→提交；登录：切换→邮箱→密码→提交 */
+  #authFormBox{display:flex; flex-direction:column;}
   .auth-btn{width:100%; border:none; border-radius:12px; padding:13px 0; font-size:15px; font-weight:700; color:#fff;
     background:linear-gradient(135deg,var(--brand),var(--brand2)); cursor:pointer;
     transition:transform .15s, box-shadow .15s; box-shadow:0 6px 16px rgba(46,91,255,.32);}
@@ -188,14 +192,6 @@
     font-size:12.5px; color:var(--sub); background:transparent; cursor:pointer; transition:all .18s;}
   .auth-ghost:hover{border-color:var(--brand2); color:var(--brand); background:#f7f9ff;}
   .auth-tip{font-size:11.5px; color:#9aa7c2; margin-top:16px; line-height:1.7;}
-  .auth-diag-btn{display:block; margin:14px auto 0; border:none; background:transparent; color:#7a8cb8;
-    font-size:12.5px; cursor:pointer; text-decoration:underline; text-underline-offset:3px;}
-  .auth-diag-btn:hover{color:var(--brand);}
-  #authDiagPanel{margin-top:14px; padding:14px 16px; border:1px solid var(--line); border-radius:12px;
-    background:#fbfcff; text-align:left; font-size:13px; line-height:1.9; color:var(--ink);}
-  #authDiagPanel .d-ok{color:#2e9e5b; font-weight:700;}
-  #authDiagPanel .d-bad{color:#c0392b; font-weight:700;}
-  #authDiagPanel .d-tip{color:#8a6d1a; background:#fff9e6; border-radius:8px; padding:6px 10px; margin-top:6px; font-size:12.5px;}
   /* AI 扩卡 */
   .ai-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
     box-shadow:0 10px 30px rgba(24,40,72,.08); padding:18px 16px; margin-bottom:14px;}
@@ -277,27 +273,24 @@
   <div class="auth-card">
     <div class="auth-logo">AI</div>
     <h2>AI PM 知识打卡站</h2>
-    <p class="auth-sub" id="authCloudState">首次使用请注册账号，学习进度云端保存</p>
     <div id="authMsg" class="auth-msg"></div>
     <p id="cloudTip" class="auth-msg" style="display:none"></p>
     <button class="auth-btn" data-act="cloud-retry" id="retryBtn" style="display:none;">重试连接</button>
     <div id="authFormBox">
+      <input id="authUser" class="auth-input" placeholder="邮箱账号（如 name@example.com）" maxlength="64" autocomplete="username">
+      <input id="authPw" class="auth-input" type="password" placeholder="密码（8-16 位，含字母和数字）" maxlength="16" autocomplete="current-password">
+      <input id="authPw2" class="auth-input" type="password" placeholder="确认密码" maxlength="16" style="display:none" autocomplete="new-password">
+      <div id="authVcodeRow" style="display:none; gap:8px; margin-bottom:12px;">
+        <input id="authVcode" class="auth-input" style="flex:1; margin:0; min-width:0" placeholder="邮箱验证码" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+        <button id="btnSendCode" class="auth-btn-send" data-act="auth-send-code">获取验证码</button>
+      </div>
+      <button class="auth-btn" data-act="auth-submit" id="authSubmit">注 册</button>
       <div class="auth-tabs">
         <button class="auth-tab on" data-act="auth-tab" data-mode="login">登录</button>
         <button class="auth-tab" data-act="auth-tab" data-mode="register">注册</button>
       </div>
-      <input id="authUser" class="auth-input" placeholder="邮箱账号（如 name@example.com）" maxlength="64" autocomplete="username">
-      <input id="authPw" class="auth-input" type="password" placeholder="密码（8-32 位，需含字母和数字）" maxlength="32" autocomplete="current-password">
-      <input id="authPw2" class="auth-input" type="password" placeholder="确认密码" maxlength="32" style="display:none" autocomplete="new-password">
-      <div id="authVcodeRow" style="display:none; gap:8px;">
-        <input id="authVcode" class="auth-input" style="flex:1; margin:0" placeholder="邮箱验证码（6 位数字）" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
-        <button id="btnSendCode" class="auth-btn-send" data-act="auth-send-code">获取验证码</button>
-      </div>
-      <button class="auth-btn" data-act="auth-submit" id="authSubmit">注 册</button>
     </div>
-    <button class="auth-diag-btn" data-act="auth-diag" id="authDiagBtn">注册/登录连不上？点此运行「连接诊断」</button>
-    <div id="authDiagPanel" style="display:none;"></div>
-    <p class="auth-tip">账号与学习进度保存在「腾讯云开发」云端，本设备登录一次后 <b>30 天内免登录</b>；<br>注册邮箱账号后，换设备 / 清缓存都能通过邮箱 + 密码找回进度</p>
+    <p class="auth-tip">账号与学习进度已自动保存，本设备30天免登录</p>
   </div>
 </div>
 <div class="wrap">
@@ -360,12 +353,51 @@ setTimeout(function(){
 </script>
 <script>
 /* ---------------- CloudBase 纯云端模式 ----------------
- * v11.5：注册制 + 本设备 30 天免登录——第一次进入必须注册邮箱账号（无匿名账号），
+ * v11.21：注册页验证码行与「注册」按钮之间增加间隙——
+ *       #authVcodeRow 加 margin-bottom:12px，与其他输入框间距一致。
+ * v11.20：注册页验证码输入框与「获取验证码」按钮同一水平线——
+ *       align-items:stretch 让按钮与输入框等高，按钮去掉 margin-bottom、改用
+ *       上下 0 内边距（文字默认垂直居中），两侧视觉严格对齐。
+ * v11.19：验证码发送失败后「获取验证码」按钮进入 10 秒冷却再重试——
+ *       云开发邮件服务限 10 封/分钟，防止快速连点触发送信限流。
+ * v11.18：验证码发送失败 / 注册失败时，界面保持短提示，
+ *       完整错误同时输出到浏览器控制台（F12→Console），便于定位根因。
+ * v11.17：失败提示进一步精简——验证码发送失败只显示「验证码发送失败」，
+ *       注册失败只显示「注册失败」（不再拼接云端长串原因；线路不可达仍自动切备用线路），
+ *       验证码输入框与「获取验证码」按钮强制同一行（flex-wrap:nowrap + min-width:0）。
+ * v11.16：验证码发送失败提示精简——SDK 把 code=unreachable 包在 [SERVICE_ERROR] 的
+ *       message 里时同样按「网络不可达」处理（自动切备线重发一次 + 短提示
+ *       「网络错误，请检查网络后重试」），其他失败统一短提示「验证码发送失败，请稍后重试」，
+ *       不再展示云端长串文案。
+ * v11.15：邮箱验证码输入框占位文案精简为「邮箱验证码」——不再显示括号内的格式说明。
+ * v11.14：移除「连接诊断」入口——认证页不再显示诊断按钮/面板（runDiag 等已删除）；
+ *       线路探测与自动切换（probeReach/pickBestOrigin/switchToAltOrigin）保留，
+ *       作为注册登录自动重试的兜底逻辑。
+ * v11.13：登录失败提示精简——只区分两类：网络错误（提醒检查网络）与
+ *       账号密码问题（「邮箱或密码不正确，请重试」），不再展示云端长串配置文案。
+ * v11.12：注册模式输入即校验——密码（8-16 位含字母和数字）与二次密码（一致性）
+ *       在用户输入每一个字符时实时给出提示（authLiveCheck），无需等到提交/发送验证码。
+ * v11.11：切换 tab 与下方账号（邮箱）输入框之间留出空隙（margin-bottom:12px）。
+ * v11.10：登录/注册切换 tab 移至表单最上方（输入框之上）：
+ *       切换 → 邮箱 → 密码 →（注册模式加：确认密码 → 验证码）→ 提交按钮，
+ *       提交按钮仍位于「连接诊断」链接之上、输入框之后。
+ * v11.9：修复表单 order 排序——提交按钮与登录/注册切换未设 order（默认 0），
+ *       在 flex 列布局中会排到所有输入框之前；现全部显式指定 order，
+ *       保证「输入框在前、提交按钮在后、连接诊断在最底」。
+ * v11.8：邮箱即用户名——注册/登录不再需要单独的用户名字段，直接用邮箱作为账号：
+ * 注册：邮箱 + 密码（8-16 位，含字母和数字）+ 确认密码 + 邮箱验证码（1 分钟内有效，60 秒重发倒计时）；
+ * 登录：输入邮箱 + 密码 → 先查 users 集合确认账号存在（账号不存在提示「请先注册」，
+ *       密码错误提示「可重新输入」）→ 用邮箱校验密码登录；
+ *       集合无读权限时降级为直接登录，由云端判定（兼容「仅创建者可读写」权限）。
+ * v11.7：注册/登录流程按「注册流程 / 登录流程」重做（含用户名方案，v11.8 起以邮箱为唯一账号）。
+ * v11.6：注册制 + 本设备 30 天免登录——第一次进入必须注册邮箱账号（无匿名账号），
  * 注册/登录成功后本设备保存登录时间戳，30 天内再次打开直接进入；超过 30 天需重新登录。
  * 进度一律存云端（user_progress 集合按账号隔离），本地仅缓存提速；
  * 用户数据（邮箱/昵称/首次注册时间/最近登录时间）在注册与登录成功后写入 users 集合（doc = uid），
  * 与进度一致按账号隔离，换设备用同一邮箱登录即自动带出。
  * SDK 加载 / 联网失败时展示「重试连接」界面，不会降级本地模式。
+ * 【v11.6 精简】认证页只保留标题 + 输入框 + 一行提示（账号与学习进度已自动保存，本设备30天免登录），
+ *   移除副标题等冗长描述（authCloudState 元素与 showAuth 中的赋值一并删除）。
  * 【v11.5 修复】线路探测改用 fetch(mode:'no-cors')：v11.3/v11.4 用 XHR 探测域名根路径，
  * 而腾讯云对根路径 / 的响应不带 Access-Control-Allow-Origin 头，浏览器 CORS 策略会拦截响应
  * （status=0），导致网络正常也被误判为「两条线路都不可达」，页面卡在「无法连接云开发服务」。
@@ -1402,7 +1434,9 @@ function isUnreachableErr(err){
   var it = (err.error && typeof err.error === 'object') ? err.error : err;
   var s = String([it && it.code, it && it.error, it && it.errorCode].join('|')).toLowerCase();
   var d = String(it && it.error_description || it && it.message || '');
-  return /(^|\|)unreachable(\||$)/.test(s) || /failed to fetch|networkerror|load failed|fetch failed|net::/i.test(d);
+  /* v11.16：SDK 常把 code=unreachable 包在 [SERVICE_ERROR] 的 message 里（如「服务异常…(code=unreachable, reqid=…)」），
+     同样按网络不可达处理，触发线路切换/重试，并给出短提示 */
+  return /(^|\|)unreachable(\||$)/.test(s) || /failed to fetch|networkerror|load failed|fetch failed|net::|unreachable/i.test(d);
 }
 /* v11.3：SDK 认证请求走 XMLHttpRequest，fetch 重写（v11.2）对认证请求无效；
    改用 SDK 官方端点注册接口（app.registerEndPoint）做「真实线路切换」：
@@ -1473,9 +1507,10 @@ function sendAuthCode(){
   if(!cloudMode){ authMsg('云端尚未就绪，请重试', false); return; }
   var u = (document.getElementById('authUser').value || '').trim();
   var p = document.getElementById('authPw').value || '';
+  /* 邮箱即账号：校验邮箱格式与密码规则（8-16 位） */
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(u)){ authMsg('请先输入正确的邮箱账号', false); return; }
-  if(p.length < 8 || p.length > 32 || !/[A-Za-z]/.test(p) || !/\d/.test(p)){ authMsg('请先设置密码（8-32 位，含字母和数字），再获取验证码', false); return; }
-  /* v11.3：注册模式下「确认密码」必须与密码一致才允许发送验证码 */
+  if(p.length < 8 || p.length > 16 || !/[A-Za-z]/.test(p) || !/\d/.test(p)){ authMsg('请先设置密码（8-16 位，含字母和数字），再获取验证码', false); return; }
+  /* 注册模式下「确认密码」必须与密码一致才允许发送验证码 */
   var p2El = document.getElementById('authPw2');
   if(p2El && p2El.style.display !== 'none' && (p2El.value || '') !== p){
     authMsg('两次输入的密码不一致，请重新确认', false); return;
@@ -1486,13 +1521,19 @@ function sendAuthCode(){
   var st = new Promise(function(_, rej){ setTimeout(function(){ rej(new Error('发送超时：云端无响应，请检查网络后重试')); }, 15000); });
   Promise.race([cbSignUp(u, p), st])
     .then(function(){
-      authMsg('验证码已发送至 ' + u + '，请查收（留意垃圾邮件），5 分钟内有效', true);
+      authMsg('验证码已发送至 ' + u + '，请查收（留意垃圾邮件），1 分钟内有效', true);
       startCd(60);
     })
     .catch(function(err){
-      /* v11.3：默认线路不可达（code=unreachable）→ 真实切换备用线路并自动重发一次验证码 */
+      /* 默认线路不可达（code=unreachable）→ 真实切换备用线路并自动重发一次验证码 */
       if(tryAltOrigin(err)){ setTimeout(function(){ sendAuthCode(); }, 400); return; }
-      authMsg('验证码发送失败：' + authErrText(err), false);
+      /* v11.17：验证码发送失败统一短提示，不再展示云端长串文案；
+         v11.18：完整错误输出到浏览器控制台（F12→Console），便于定位根因；
+         v11.19：发送失败后按钮进入 10 秒冷却——云开发邮件服务限 10 封/分钟，
+         防止快速连点触发送信限流（成功发送仍为 60 秒倒计时） */
+      console.warn('验证码发送失败（详情如下）', err);
+      authMsg('验证码发送失败', false);
+      startCd(10);
     });
 }
 function startCd(n){
@@ -1571,6 +1612,26 @@ function isCollectionMissingErr(e){
   return /COLLECTION_NOT_EXIST|DATABASE_COLLECTION|NOT_EXIST|集合不存在|502005/.test(s);
 }
 function noteCollectionMissing(){ _needCreateCollection = true; }
+/* v11.7：按字段查 users 集合（用于注册前查重、登录前确认账号存在）。
+   返回 {state:'ok', data} / {state:'missing'} / {state:'none'}（查询失败不阻塞主流程） */
+function lookupUsers(field, value){
+  if(!CB || !CB.db || !CB.db.collection || !value) return Promise.resolve({ state: 'none' });
+  var q = {};
+  q[field] = String(value);
+  var p;
+  try{
+    p = CB.db.collection('users').where(q).limit(1).get();
+  }catch(e){ return Promise.resolve({ state: 'none' }); }
+  return p.then(function(res){
+      var list = (res && res.data) || [];
+      return { state: list.length ? 'ok' : 'missing', data: list[0] || null };
+    })
+    .catch(function(e){
+      /* 集合缺失 / 无读权限（仅创建者可读写）时无法确认 → 返回 none，由调用方降级处理 */
+      if(isCollectionMissingErr(e)){ noteCollectionMissing(); }
+      return { state: 'none' };
+    });
+}
 function saveUserProfile(user){
   if(!CB || !CB.db || !user) return Promise.resolve();
   var uid = String(userKey(user) || '');
@@ -1596,51 +1657,6 @@ function saveUserProfile(user){
     return Promise.resolve();
   }
 }
-/* v11.4：连接诊断——逐项检查「浏览器 → 腾讯云」链路，输出可复制的诊断报告。
-   覆盖：① SDK 加载 ② 网关线路 ③ 经典线路 ④ 云数据库集合。 */
-function diagLine(name, ok, note){
-  return '<div><span class="' + (ok ? 'd-ok' : 'd-bad') + '">' + (ok ? '✓' : '✗') + '</span> ' + name +
-         (note ? ' <span style="color:#667;font-size:12.5px">' + note + '</span>' : '') + '</div>';
-}
-function runDiag(){
-  var out = document.getElementById('authDiagPanel');
-  if(!out) return;
-  out.style.display = 'block';
-  out.innerHTML = '正在检测，请稍候…（约 2-10 秒）';
-  var o = apiOriginUrls();
-  var items = [];
-  items[0] = { n: '1、云开发组件（SDK）加载', ok: typeof cloudbase !== 'undefined', note: typeof cloudbase !== 'undefined' ? '已加载（' + CLOUDBASE_SDK_URL.split('/')[2] + '）' : '未加载：static.cloudbase.net 可能被网络拦截' };
-  Promise.all([probeReach(o.gateway), probeReach(o.region)]).then(function(rs){
-    items[1] = { n: '2、网关线路 ' + o.gateway.replace('https://', ''), ok: rs[0], note: rs[0] ? '可达（已自动切换到此线路）' : '不可达（被拦截或断网）' };
-    items[2] = { n: '3、经典线路 ' + o.region.replace('https://', ''), ok: rs[1], note: rs[1] ? '可达（SDK 默认线路）' : '不可达（已自动尝试切换线路）' };
-    /* 4、云数据库集合（诊断用固定 doc id，读取无权限影响） */
-    var p4;
-    if(CB && CB.db){
-      p4 = CB.db.collection('user_progress').doc('_diag_probe').get()
-        .then(function(){ return { ok: true, note: '集合可访问（user_progress）' }; })
-        .catch(function(e){
-          if(isCollectionMissingErr(e)){ noteCollectionMissing(); return { ok: false, note: '集合不存在——请到云开发控制台创建集合' }; }
-          if(isUnreachableErr(e)) return { ok: false, note: '数据库请求不可达（网络层）' };
-          return { ok: true, note: '已连接（' + authErrText(e) + '）' };
-        });
-    } else {
-      p4 = Promise.resolve({ ok: false, note: '数据库未初始化（SDK 未就绪）' });
-    }
-    p4.then(function(r4){
-      items[3] = { n: '4、云数据库（用户数据 / 进度存储）', ok: r4.ok, note: r4.note };
-      var h = '';
-      for(var i = 0; i < items.length; i++){ h += diagLine(items[i].n, items[i].ok, items[i].note); }
-      h += '<div style="margin-top:8px;color:#667;font-size:12.5px">环境：' + CLOUDBASE_CFG.env + '（' + (CLOUDBASE_CFG.region || 'ap-shanghai') + '）· 当前线路：' + (_altOriginOn ? '备用（网关域）' : '默认（经典域）') + '</div>';
-      if(_needCreateCollection){
-        h += '<div class="d-tip">提示：云端集合尚未创建。请在腾讯云开发控制台 → 数据库 → 创建集合 <b>user_progress</b>、<b>users</b>（权限都选「仅创建者可读写」），创建后刷新本页即可正常保存进度与用户数据。</div>';
-      }
-      if(!(items[1].ok || items[2].ok)){
-        h += '<div class="d-tip">两条线路都不可达：通常是当前网络屏蔽了外部域名。建议：① 用手机热点打开本页完成注册（推荐先试）；② 联系网络管理员放行 *.tcloudbasegateway.com 与 *.tencentcloudapi.com。</div>';
-      }
-      out.innerHTML = h;
-    });
-  });
-}
 var _authListenerOn = false;
 function setupAuthListener(){
   if(_authListenerOn) return;
@@ -1653,7 +1669,7 @@ function setupAuthListener(){
       } else {
         currentUser = null;
         showAuth();
-        ['authUser','authPw','authPw2'].forEach(function(id){
+        ['authUser','authPw','authPw2','authVcode'].forEach(function(id){
           var el = document.getElementById(id); if(el) el.value = '';
         });
       }
@@ -1724,13 +1740,22 @@ function setAuthMode(m){
   var isReg = (m === 'register');
   var tabs = document.querySelectorAll('.auth-tab');
   for(var i=0;i<tabs.length;i++) tabs[i].classList.toggle('on', tabs[i].getAttribute('data-mode')===m);
-  var p2 = document.getElementById('authPw2'); if(p2) p2.style.display = isReg ? '' : 'none';
-  /* 注册需邮箱验证码（CloudBase「邮箱验证码」登录方式）；切走/切回时清理旧验证码句柄 */
+  /* v11.10：登录/注册切换 tab 置于表单最上方（输入框之上）；
+     注册 = 切换→邮箱→密码→确认密码→验证码→提交；登录 = 切换→邮箱→密码→提交 */
+  var pw = document.getElementById('authPw'); if(pw) pw.style.order = '3';
+  var p2 = document.getElementById('authPw2');
+  if(p2){ p2.style.display = isReg ? '' : 'none'; p2.style.order = isReg ? '4' : ''; }
+  var au = document.getElementById('authUser');
+  if(au){ au.style.order = '2'; au.placeholder = '邮箱账号（如 name@example.com）'; }
   var vrow = document.getElementById('authVcodeRow');
-  if(vrow) vrow.style.display = isReg ? 'flex' : 'none';
+  if(vrow){ vrow.style.display = isReg ? 'flex' : 'none'; vrow.style.order = isReg ? '5' : ''; }
   var vcode = document.getElementById('authVcode'); if(vcode) vcode.value = '';
   _vcodeVerifyOtp = null; resetSendBtn(true);
-  var sub = document.getElementById('authSubmit'); if(sub) sub.textContent = isReg ? '注 册' : '登 录';
+  /* 提交按钮：注册 6 / 登录 4（始终在输入框之后、连接诊断之上） */
+  var sub = document.getElementById('authSubmit');
+  if(sub){ sub.style.order = isReg ? '6' : '4'; sub.textContent = isReg ? '注 册' : '登 录'; }
+  var tsw = document.querySelector('.auth-tabs');
+  if(tsw){ tsw.style.order = '1'; }
   authMsg('');
 }
 /* v11.1：启动连接中（隐藏操作按钮，仅展示状态） */
@@ -1753,7 +1778,6 @@ function showConnFail(msg){
 function showAuth(msg){
   var sc = document.getElementById('authScreen'); if(sc) sc.style.display = 'flex';
   var w = document.querySelector('.wrap'); if(w) w.style.display = 'none';
-  var cs = document.getElementById('authCloudState'); if(cs) cs.textContent = '账号与学习进度已开启云端保存（本设备 30 天免登录）';
   var rb = document.getElementById('retryBtn'); if(rb) rb.style.display = 'none';
   var fb = document.getElementById('authFormBox'); if(fb) fb.style.display = '';
   var hasAcc = false; try{ hasAcc = !!localStorage.getItem(HAS_ACCOUNT_KEY); }catch(e){}
@@ -1766,32 +1790,46 @@ function doLogin(){
   if(!u){ authMsg('请输入邮箱账号', false); return; }
   if(!p){ authMsg('请输入密码', false); return; }
   authMsg('登录中…');
-  /* 15 秒超时兜底：SDK 若挂起（网络异常等）也不能让界面卡在"登录中" */
-  var to = new Promise(function(_, rej){ setTimeout(function(){ rej(new Error('登录超时：云端无响应，请检查网络后重试')); }, 15000); });
-  Promise.race([cbSignIn(u, p), to])
-    .then(function(res){
-      /* 部分 SDK 登录成功后不触发登录态回调，主动兜底读取会话用户；
-         新版 SDK 的 signIn 返回值本身就可能携带 user */
-      var cu = (res && res.user) || cloudSessUser();
-      if(cu && !currentUser){ cloudEnter(cu); return; }
-      if(currentUser){ authMsg(''); return; }
-      authMsg('登录未完成：未获取到登录态，请重试（若持续如此请反馈给 dodo）', false);
-    })
-    .catch(function(err){
-      /* v11.3：默认线路不可达 → 切换备用线路并自动重试一次登录 */
-      if(tryAltOrigin(err)){ setTimeout(function(){ doLogin(); }, 400); return; }
-      authMsg('登录失败：' + ((err && err.message) || '请检查邮箱密码或控制台配置'), false);
-    });
+  /* 按登录流程——先查 users 集合确认账号存在（邮箱即用户名），存在则用邮箱校验密码 */
+  lookupUsers('email', u).then(function(r){
+    if(r.state === 'ok' && r.data && r.data.email){ return r.data.email; }
+    if(r.state === 'missing'){ authMsg('账号不存在，请先注册', false); return null; }
+    return u;   /* 查不到（无读权限/集合未建等）：降级直接以原输入登录，由云端判定 */
+  }).then(function(ident){
+    if(ident === null) return;
+    /* 15 秒超时兜底：SDK 若挂起（网络异常等）也不能让界面卡在"登录中" */
+    var to = new Promise(function(_, rej){ setTimeout(function(){ rej(new Error('登录超时：云端无响应，请检查网络后重试')); }, 15000); });
+    return Promise.race([cbSignIn(ident, p), to])
+      .then(function(res){
+        /* 部分 SDK 登录成功后不触发登录态回调，主动兜底读取会话用户；
+           新版 SDK 的 signIn 返回值本身就可能携带 user */
+        var cu = (res && res.user) || cloudSessUser();
+        if(cu && !currentUser){ cloudEnter(cu); return; }
+        if(currentUser){ authMsg(''); return; }
+        authMsg('登录未完成：未获取到登录态，请重试（若持续如此请反馈给 dodo）', false);
+      })
+      .catch(function(err){
+        /* v11.3：默认线路不可达 → 切换备用线路并自动重试一次登录 */
+        if(tryAltOrigin(err)){ setTimeout(function(){ doLogin(); }, 400); return; }
+        var m = String((err && err.message) || '');
+        if(/尚未注册|USER_NOT_FOUND/.test(m)){ authMsg('账号不存在，请先注册', false); return; }
+        if(/密码错误|INVALID_CREDENTIALS/.test(m)){ authMsg('密码错误，可重新输入', false); return; }
+        /* v11.13：登录失败提示精简——只区分「网络错误」与「账号密码问题」两类 */
+        if(isUnreachableErr(err) || /failed to fetch|networkerror|network|timeout|超时|ECONN|aborted|unavailable|socket|unreachable/i.test(m)){
+          authMsg('网络错误，请检查网络后重试', false); return;
+        }
+        authMsg('邮箱或密码不正确，请重试', false);
+      });
+  });
 }
 function doRegister(){
   var u = (document.getElementById('authUser').value || '').trim();
   var p = document.getElementById('authPw').value || '';
   var p2 = document.getElementById('authPw2').value || '';
-  /* 云端注册必须用邮箱作为账号（CloudBase signUp 要求 email 或 phone 二选一） */
+  /* 注册 = 邮箱（即账号）+ 密码（8-16 位，含字母和数字）+ 确认密码 + 验证码（1 分钟内有效） */
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(u)){ authMsg('注册需使用邮箱作为账号（格式如 name@example.com）', false); return; }
   if(u.length > 64){ authMsg('邮箱地址过长', false); return; }
-  /* 与 CloudBase 邮箱注册规则对齐：8-32 位，需同时包含字母和数字 */
-  if(p.length < 8 || p.length > 32 || !/[A-Za-z]/.test(p) || !/\d/.test(p)){ authMsg('密码需 8-32 位，且同时包含字母和数字', false); return; }
+  if(p.length < 8 || p.length > 16 || !/[A-Za-z]/.test(p) || !/\d/.test(p)){ authMsg('密码需 8-16 位，且同时包含字母和数字', false); return; }
   if(p !== p2){ authMsg('两次输入的密码不一致', false); return; }
   /* 注册 = 邮箱 + 密码 + 邮箱验证码（先「获取验证码」，再输入 6 位数字提交） */
   var code = (document.getElementById('authVcode').value || '').trim();
@@ -1812,9 +1850,11 @@ function doRegister(){
       }, 200);
     })
     .catch(function(err){
-      /* v11.3：默认线路不可达 → 切换备用线路；提交句柄一次有效，仅提示重新获取验证码 */
-      if(tryAltOrigin(err)){ authMsg('已切换到备用线路，请再点一次「获取验证码」后重试', false); return; }
-      authMsg('注册失败：' + ((err && err.message) || '请检查网络或云端配置'), false);
+      /* v11.17：注册失败统一短提示（默认线路不可达时先切换备用线路，不再展示云端长串文案）；
+         v11.18：完整错误输出到浏览器控制台（F12→Console），便于定位根因 */
+      tryAltOrigin(err);
+      console.warn('注册失败（详情如下）', err);
+      authMsg('注册失败', false);
     });
 }
 function doLogout(){
@@ -1823,7 +1863,7 @@ function doLogout(){
   currentUser = null;
   clearLoginTs();
   showAuth();
-  ['authUser','authPw','authPw2'].forEach(function(id){
+  ['authUser','authPw','authPw2','authVcode'].forEach(function(id){
     var el = document.getElementById(id); if(el) el.value = '';
   });
 }
@@ -1903,7 +1943,6 @@ document.addEventListener('click', function(e){
   else if(act==='export'){ exportData(); }
   else if(act==='auth-tab'){ setAuthMode(t.getAttribute('data-mode')); }
   else if(act==='auth-send-code'){ sendAuthCode(); }
-  else if(act==='auth-diag'){ runDiag(); }
   else if(act==='cloud-retry'){ if(typeof location !== 'undefined' && location.reload) location.reload(); }
   else if(act==='ai-preset'){ aiCfgPreset(parseInt(t.getAttribute('data-i'),10)||0); }
   else if(act==='ai-cfg-save'){ aiCfgSave(); }
@@ -1918,8 +1957,35 @@ document.addEventListener('click', function(e){
   }
   else if(act==='logout'){ doLogout(); }
 });
+/* v11.12：注册模式下密码/二次密码「输入即校验」——每敲一个字符立即给出提示，
+   无需等到提交或点「发送验证码」；登录模式不校验（密码只用于提交） */
+function authLiveCheck(which){
+  var pw = document.getElementById('authPw'), pw2 = document.getElementById('authPw2');
+  if(!pw || !pw2) return;
+  var t = document.querySelector('.auth-tab.on');
+  if(!t || t.getAttribute('data-mode') !== 'register') return;   /* 仅注册模式 */
+  var p = pw.value || '', p2 = pw2.value || '';
+  var pw2Visible = pw2.style.display !== 'none';
+  if(which === 'pw'){
+    if(p.length === 0){ authMsg(''); }
+    else if(p.length < 8){ authMsg('密码需 8-16 位（当前 ' + p.length + ' 位，且需含字母和数字）', false); }
+    else if(p.length > 16){ authMsg('密码最多 16 位', false); }
+    else if(!/[A-Za-z]/.test(p)){ authMsg('密码需包含字母', false); }
+    else if(!/\d/.test(p)){ authMsg('密码需包含数字', false); }
+    else if(pw2Visible && p2.length > 0){ authMsg(p2 === p ? '密码格式正确，两次输入一致' : '密码格式正确，但两次输入不一致', p2 === p); }
+    else { authMsg('密码格式正确', true); }
+  } else if(which === 'pw2'){
+    if(p2.length === 0){ authMsg(''); }
+    else if(p2 === p){ authMsg('两次输入一致', true); }
+    else { authMsg('两次输入的密码不一致', false); }
+  }
+}
 document.addEventListener('input', function(e){
-  if(e.target && e.target.id==='libSearch'){ libKw = e.target.value; renderLibList(); }
+  if(e.target && e.target.id==='libSearch'){ libKw = e.target.value; renderLibList(); return; }
+  /* v11.12：密码/二次密码输入即校验（注册模式下实时反馈） */
+  if(e.target && (e.target.id==='authPw' || e.target.id==='authPw2')){
+    authLiveCheck(e.target.id === 'authPw' ? 'pw' : 'pw2');
+  }
 });
 document.addEventListener('keydown', function(e){
   if(e.key==='Escape'){ closeSettings(); return; }

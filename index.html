@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AI 产品经理知识打卡</title>
+<style>
+  :root{
+    --bg1:#f2f6ff; --bg2:#e9f0ff; --ink:#182848; --sub:#6b7a99;
+    --brand:#2e5bff; --brand2:#4e8cff; --brand3:#7cb3ff;
+    --ok:#10b981; --warn:#f59e0b; --bad:#ef4444;
+    --card:#ffffff; --line:#e3eafc; --radius:18px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:linear-gradient(180deg,var(--bg1),var(--bg2)); color:var(--ink); min-height:100vh;
+  }
+  .wrap{max-width:680px; margin:0 auto; padding:20px 16px 60px;}
+  header{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .logo{display:flex; align-items:center; gap:12px;}
+  .logo .avatar{
+    width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,#2e5bff,#7cb3ff);
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+    box-shadow:0 6px 16px rgba(46,91,255,.35); flex-shrink:0;
+  }
+  .logo .avatar .avatar-txt{color:#fff; font-weight:800; font-size:21px; letter-spacing:0; line-height:1; user-select:none;}
+  .logo h1{font-size:19px; letter-spacing:.5px;}
+  .streak-chip{
+    display:flex; align-items:center; gap:6px; background:#fff; border:1px solid var(--line);
+    border-radius:999px; padding:7px 14px; font-weight:700; font-size:15px;
+    box-shadow:0 2px 10px rgba(46,91,255,.10);
+  }
+  .date-line{font-size:12px; color:var(--sub); margin-bottom:14px;}
+  nav{display:flex; gap:8px; margin-bottom:18px; background:#fff; padding:5px; border-radius:999px; border:1px solid var(--line);}
+  nav button{
+    flex:1; border:none; background:transparent; padding:9px 0; border-radius:999px;
+    font-size:14px; font-weight:600; color:var(--sub); cursor:pointer; transition:.2s;
+  }
+  nav button.on{background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; box-shadow:0 4px 12px rgba(46,91,255,.35);}
+  .hint{
+    background:linear-gradient(135deg,#eef4ff,#e0f0ff); border:1px solid #d6e6ff; color:#1e5bdb;
+    border-radius:14px; padding:12px 14px; font-size:13px; line-height:1.7; margin-bottom:16px;
+  }
+  .progress-row{display:flex; align-items:center; gap:12px; margin-bottom:14px;}
+  .ring{width:52px; height:52px; flex-shrink:0;}
+  .ring svg{transform:rotate(-90deg);}
+  .ring .num{font-size:13px; font-weight:800; fill:var(--ink);}
+  .progress-row .txt{font-size:14px; font-weight:600;}
+  .progress-row .txt small{display:block; font-weight:400; color:var(--sub); font-size:12px; margin-top:2px;}
+  .flip-area{perspective:1200px; margin-bottom:14px;}
+  .flip3d{position:relative; min-height:320px; transform-style:preserve-3d; transition:transform .5s cubic-bezier(.2,.7,.3,1.1); cursor:pointer;}
+  .flip3d.flipped{transform:rotateY(180deg);}
+  .face{
+    position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:0 10px 30px rgba(24,40,72,.08); padding:24px 22px; overflow-y:auto;
+  }
+  .face.back{transform:rotateY(180deg);}
+  .cat-badge{display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700;
+    padding:4px 10px; border-radius:999px; margin-bottom:14px;}
+  .front .term{font-size:24px; font-weight:800; line-height:1.35; margin-bottom:10px;}
+  .front .tap{position:absolute; bottom:20px; left:0; right:0; text-align:center; color:#b0bdd8; font-size:12px;}
+  .back .brief{font-size:15px; line-height:1.7; color:#374a6b; margin-bottom:12px; font-weight:600;}
+  .back ul{list-style:none; margin-bottom:12px;}
+  .back li{font-size:13.5px; line-height:1.7; color:#4b5c7e; padding-left:18px; position:relative; margin-bottom:6px;}
+  .back li::before{content:""; position:absolute; left:2px; top:9px; width:7px; height:7px; border-radius:50%;
+    background:linear-gradient(135deg,var(--brand),var(--brand2));}
+  .pm-note{
+    background:linear-gradient(135deg,#fff8ec,#fef0d1); border:1px solid #fde6ae; border-radius:12px;
+    padding:10px 12px; font-size:13px; line-height:1.65; color:#8a5a0e;
+  }
+  .pm-note b{color:#a56a04;}
+  .grades{display:flex; gap:12px; margin-bottom:8px;}
+  .grades button{
+    flex:1; border:none; border-radius:14px; padding:15px 0; font-size:15px; font-weight:700;
+    cursor:pointer; transition:.15s; box-shadow:0 4px 14px rgba(24,40,72,.08);
+  }
+  .g-bad{background:#fff; color:var(--bad); border:1.5px solid #fecaca !important;}
+  .g-bad:active{transform:scale(.97); background:#fef2f2;}
+  .g-good{background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff;}
+  .g-good:active{transform:scale(.97);}
+  .kbd-tip{text-align:center; font-size:11px; color:#b0bdd8;}
+  .done-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:0 10px 30px rgba(24,40,72,.08); padding:36px 24px; text-align:center;}
+  .done-card .big{font-size:52px; margin-bottom:10px;}
+  .done-card h2{font-size:20px; margin-bottom:8px;}
+  .done-card p{font-size:13.5px; color:var(--sub); line-height:1.7; margin-bottom:20px;}
+  .btn{
+    display:inline-block; border:none; border-radius:12px; padding:12px 22px; font-size:14px;
+    font-weight:700; cursor:pointer; transition:.15s;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; box-shadow:0 6px 16px rgba(46,91,255,.35);}
+  .btn-ghost{background:#fff; color:var(--brand); border:1.5px solid #d6e4ff; margin-left:10px;}
+  .lib-head{display:flex; gap:10px; margin-bottom:12px;}
+  .lib-head input{
+    flex:1; border:1.5px solid var(--line); border-radius:12px; padding:11px 14px; font-size:14px;
+    outline:none; background:#fff; color:var(--ink);
+  }
+  .lib-head input:focus{border-color:var(--brand);}
+  .chips{display:flex; gap:7px; flex-wrap:wrap; margin-bottom:16px;}
+  .chip{border:1.5px solid var(--line); background:#fff; border-radius:999px; padding:6px 13px;
+    font-size:12.5px; font-weight:600; color:var(--sub); cursor:pointer;
+    transition:transform .18s ease, background .18s, color .18s, box-shadow .18s, border-color .18s;}
+  .chip:hover{border-color:#c4d6ff; color:var(--brand); transform:translateY(-2px); box-shadow:0 4px 10px rgba(46,91,255,.15);}
+  .chip:active{transform:scale(.93);}
+  .chip.on{background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; border-color:transparent; box-shadow:0 4px 12px rgba(46,91,255,.3);}
+  .chip.on:hover{color:#fff; transform:translateY(-2px); box-shadow:0 6px 16px rgba(46,91,255,.4);}
+  @keyframes libFade{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+  #libList{animation:libFade .28s ease-out;}
+  .lib-item{background:var(--card); border:1px solid var(--line); border-radius:14px; margin-bottom:10px;
+    overflow:hidden; box-shadow:0 2px 8px rgba(24,40,72,.04);
+    transition:background .25s ease, border-color .25s ease, box-shadow .25s ease;}
+  .lib-item.open{background:linear-gradient(135deg,#e8f0ff,#dce9ff); border-color:#b7cfff; box-shadow:0 4px 14px rgba(46,91,255,.14);}
+  .lib-item.open .row .t{color:var(--brand);}
+  .lib-item .row{display:flex; align-items:center; gap:10px; padding:14px 16px; cursor:pointer;}
+  .lib-item .t{flex:1; font-size:14.5px; font-weight:700;}
+  .lib-item .c{font-size:11px; color:var(--sub); background:var(--bg1); border-radius:6px; padding:3px 8px; white-space:nowrap;}
+  .badge{font-size:11px; font-weight:700; border-radius:999px; padding:3px 9px; white-space:nowrap;}
+  .b0{background:#fee2e2; color:#dc2626;}
+  .b1{background:#fef3c7; color:#d97706;}
+  .b2{background:#dcfce7; color:#16a34a;}
+  .b3{background:#e0e7ff; color:#4f46e5;}
+  .lib-detail{display:none; padding:0 16px 16px; border-top:1px dashed var(--line);}
+  .lib-item.open .lib-detail{display:block; padding-top:14px;}
+  .stat-tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px;}
+  .tile{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 6px; text-align:center;}
+  .tile .v{font-size:22px; font-weight:800; background:linear-gradient(135deg,var(--brand),var(--brand2));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;}
+  .tile .k{font-size:11px; color:var(--sub); margin-top:4px;}
+  .sec-title{font-size:14px; font-weight:700; margin:0 0 10px;}
+  .heatmap{display:grid; grid-template-rows:repeat(7,12px); grid-auto-flow:column; gap:3px;
+    background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; overflow-x:auto; margin-bottom:22px;}
+  .hm-cell{width:12px; height:12px; border-radius:3px; background:#e8edf9;}
+  .hm1{background:#c3d5ff;} .hm2{background:#7facff;} .hm3{background:#2e5bff;} .hm4{background:#17369c;}
+  .cat-bar{margin-bottom:14px;}
+  .cat-bar .lab{display:flex; justify-content:space-between; font-size:12.5px; color:#4b5c7e; margin-bottom:5px; font-weight:600;}
+  .cat-bar .track{height:8px; background:#e8edf9; border-radius:99px; overflow:hidden;}
+  .cat-bar .fill{height:100%; border-radius:99px; background:linear-gradient(90deg,var(--brand),var(--brand2)); transition:width .4s;}
+  .foot{text-align:center; font-size:11.5px; color:#aab8d8; margin-top:30px; line-height:1.8;}
+  .burst{position:fixed; inset:0; pointer-events:none; z-index:99;}
+  .burst span{position:absolute; font-size:22px; animation:pop 1.1s ease-out forwards;}
+  @keyframes pop{0%{opacity:0; transform:translateY(0) scale(.4);} 15%{opacity:1;} 100%{opacity:0; transform:translateY(-140px) scale(1.15) rotate(20deg);}}
+  /* 用户区 */
+  .head-right{display:flex; align-items:center; gap:10px;}
+  .settings-btn{display:flex; align-items:center; justify-content:center; width:34px; height:34px; padding:0;
+    border-radius:10px; background:rgba(46,91,255,.08); border:1px solid #cfdcff; color:var(--brand);
+    cursor:pointer; transition:all .18s;}
+  .settings-btn:hover{background:rgba(46,91,255,.16); border-color:#a8c0ff; transform:translateY(-1px);}
+  .settings-btn:active{transform:scale(.96);}
+  .logout-btn{border:1px solid var(--line); background:var(--card); color:var(--sub); border-radius:999px;
+    padding:6px 12px; font-size:12px; cursor:pointer; transition:all .18s;}
+  .logout-btn:hover{color:var(--bad); border-color:#fecaca; background:#fff5f5;}
+  .logout-btn:active{transform:scale(.95);}
+  /* 登录 / 注册 */
+  #authScreen{position:fixed; inset:0; z-index:100; display:none; align-items:center; justify-content:center;
+    background:linear-gradient(180deg,var(--bg1),var(--bg2)); padding:20px;}
+  .auth-card{width:100%; max-width:370px; background:var(--card); border:1px solid var(--line); border-radius:24px;
+    padding:34px 28px 24px; text-align:center; box-shadow:0 24px 70px rgba(46,91,255,.16);}
+  .auth-logo{width:66px; height:66px; border-radius:50%; margin:0 auto 14px;
+    background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; letter-spacing:1px;
+    box-shadow:0 8px 22px rgba(46,91,255,.35);}
+  .auth-card h2{font-size:20px; margin-bottom:14px;}
+  /* v11.11：切换 tab 置顶后与下方邮箱输入框之间留出空隙 */
+  .auth-tabs{display:flex; background:#eef3ff; border-radius:12px; padding:4px; margin-top:16px; margin-bottom:12px;}
+  .auth-tab{flex:1; border:none; background:transparent; padding:9px 0; border-radius:9px; font-size:14px;
+    color:var(--sub); cursor:pointer; transition:all .18s; font-weight:600;}
+  .auth-tab.on{background:var(--card); color:var(--brand); font-weight:700; box-shadow:0 2px 8px rgba(46,91,255,.16);}
+  .auth-input{width:100%; border:1.5px solid var(--line); border-radius:12px; padding:12px 14px; font-size:14px;
+    margin-bottom:12px; outline:none; transition:border-color .18s; background:#fbfcff; color:var(--ink);}
+  .auth-input:focus{border-color:var(--brand2); background:#fff;}
+  /* v11.20：验证码输入框与「获取验证码」按钮同一水平线——
+     stretch 让按钮与输入框等高（按钮文字默认垂直居中），去掉按钮的 margin-bottom 消除偏移 */
+  #authVcodeRow{display:none; flex-direction:row; align-items:stretch; flex-wrap:nowrap;}
+  .auth-btn-send{flex:none; border:1.5px solid var(--brand2); color:var(--brand); background:#f0f4ff;
+    border-radius:12px; padding:0 12px; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap;
+    transition:all .18s;}
+  .auth-btn-send:hover{background:var(--brand2); color:#fff;}
+  .auth-btn-send:disabled{opacity:.55; cursor:not-allowed;}
+  .auth-msg{font-size:12.5px; color:var(--ok); min-height:18px; margin-bottom:8px; font-weight:600;}
+  .auth-msg.err{color:var(--bad);}
+  /* v11.10：表单项用 flex + order 按模式排序（切换 tab 在最上方）——注册：切换→邮箱→密码→确认→验证码→提交；登录：切换→邮箱→密码→提交 */
+  #authFormBox{display:flex; flex-direction:column;}
+  .auth-btn{width:100%; border:none; border-radius:12px; padding:13px 0; font-size:15px; font-weight:700; color:#fff;
+    background:linear-gradient(135deg,var(--brand),var(--brand2)); cursor:pointer;
+    transition:transform .15s, box-shadow .15s; box-shadow:0 6px 16px rgba(46,91,255,.32);}
+  .auth-btn:hover{box-shadow:0 8px 22px rgba(46,91,255,.42);}
+  .auth-btn:active{transform:scale(.97);}
+  .auth-ghost{width:100%; border:1.5px dashed var(--line); border-radius:12px; padding:10px 0; margin-top:10px;
+    font-size:12.5px; color:var(--sub); background:transparent; cursor:pointer; transition:all .18s;}
+  .auth-ghost:hover{border-color:var(--brand2); color:var(--brand); background:#f7f9ff;}
+  .auth-tip{font-size:11.5px; color:#9aa7c2; margin-top:16px; line-height:1.7;}
+  /* AI 扩卡 */
+  .ai-card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:0 10px 30px rgba(24,40,72,.08); padding:18px 16px; margin-bottom:14px;}
+  .ai-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
+  .ai-head .t{font-size:15px; font-weight:800;}
+  .ai-head .t small{font-size:11.5px; color:var(--sub); font-weight:400; display:block; margin-top:2px;}
+  .ai-cfg{background:linear-gradient(135deg,#f6f9ff,#eef4ff); border:1px solid #dbe7ff; border-radius:14px;
+    padding:12px; margin-bottom:12px; display:none;}
+  .ai-cfg.cfg-open{display:block;}
+  .ai-cfg label{display:block; font-size:11.5px; color:var(--sub); font-weight:600; margin:8px 0 4px;}
+  .ai-cfg input,.ai-cfg select{width:100%; border:1.5px solid var(--line); border-radius:10px; padding:9px 11px;
+    font-size:13px; outline:none; background:#fff; color:var(--ink);}
+  .ai-cfg input:focus{border-color:var(--brand2);}
+  .ai-cfg .row{display:flex; gap:8px; flex-wrap:wrap;}
+  .ai-cfg .row > div{flex:1; min-width:140px;}
+  .ai-presets{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+  .ai-presets button{border:1px solid #cfe0ff; background:#fff; color:var(--brand); border-radius:999px;
+    padding:4px 10px; font-size:11.5px; cursor:pointer;}
+  .ai-presets button:active{transform:scale(.95);}
+  .ai-textarea{width:100%; min-height:120px; border:1.5px solid var(--line); border-radius:14px; padding:12px 14px;
+    font-size:14px; line-height:1.7; outline:none; resize:vertical; background:#fbfcff; color:var(--ink);
+    font-family:inherit;}
+  .ai-textarea:focus{border-color:var(--brand2); background:#fff;}
+  .ai-ops{display:flex; gap:10px; margin-top:12px; align-items:center;}
+  .ai-ops select{flex:1; min-width:0; border:1.5px solid var(--line); border-radius:12px; padding:11px 12px;
+    font-size:13.5px; outline:none; background:#fff; color:var(--ink);}
+  .ai-gen-btn{border:none; border-radius:12px; padding:12px 26px; font-size:14px; font-weight:700; color:#fff;
+    background:linear-gradient(135deg,var(--brand),var(--brand2)); cursor:pointer; box-shadow:0 6px 16px rgba(46,91,255,.35);
+    transition:transform .15s;}
+  .ai-gen-btn:active{transform:scale(.96);}
+  .ai-gen-btn:disabled{opacity:.6; cursor:wait;}
+  .ai-msg{font-size:12.5px; color:var(--ok); min-height:18px; margin-top:10px; font-weight:600;}
+  .ai-msg.err{color:var(--bad);}
+  .ai-preview{display:none; background:linear-gradient(135deg,#f6f9ff,#eef4ff); border:1px solid #dbe7ff;
+    border-radius:14px; padding:14px; margin-bottom:14px;}
+  .ai-preview.pv-open{display:block;}
+  .ai-preview h3{font-size:13.5px; font-weight:800; margin-bottom:10px;}
+  .ai-preview label{display:block; font-size:11.5px; color:var(--sub); font-weight:600; margin:9px 0 4px;}
+  .ai-preview input,.ai-preview select,.ai-preview textarea{width:100%; border:1.5px solid var(--line);
+    border-radius:10px; padding:9px 11px; font-size:13.5px; outline:none; background:#fff; color:var(--ink);
+    line-height:1.6; font-family:inherit; resize:vertical;}
+  .ai-preview input:focus,.ai-preview textarea:focus{border-color:var(--brand2);}
+  .ai-pv-ops{display:flex; gap:10px; margin-top:14px;}
+  .ai-pv-ops .save{flex:1; border:none; border-radius:12px; padding:11px 0; font-size:14px; font-weight:700;
+    color:#fff; background:linear-gradient(135deg,var(--brand),var(--brand2)); cursor:pointer;}
+  .ai-pv-ops .cancel{flex:1; border:1.5px solid var(--line); border-radius:12px; padding:11px 0; font-size:14px;
+    font-weight:600; color:var(--sub); background:#fff; cursor:pointer;}
+  .ai-list-item{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px;
+    margin-bottom:9px; display:flex; align-items:center; gap:10px; box-shadow:0 2px 8px rgba(24,40,72,.04);}
+  .ai-list-item .t{flex:1; min-width:0; font-size:14px; font-weight:700; overflow:hidden;
+    text-overflow:ellipsis; white-space:nowrap;}
+  .ai-list-item .c{font-size:11px; color:var(--brand); background:rgba(46,91,255,.08); border-radius:6px;
+    padding:3px 8px; white-space:nowrap;}
+  .ai-list-item .del{border:none; background:transparent; color:#b0bdd8; font-size:15px; cursor:pointer;
+    padding:4px 8px; border-radius:8px; transition:.15s;}
+  .ai-list-item .del:hover{color:var(--bad); background:#fef2f2;}
+  /* 设置页 */
+  .set-cols{display:flex; gap:12px; margin-bottom:14px;}
+  .set-cols > div{flex:1; min-width:0;}
+  .set-lab{font-size:13px; font-weight:700; margin-bottom:6px;}
+  .set-num{width:100%; border:1.5px solid var(--line); border-radius:12px; padding:11px 14px; font-size:16px;
+    font-weight:800; outline:none; background:#fff; color:var(--ink); text-align:center;}
+  .set-num:focus{border-color:var(--brand2);}
+  .set-sub{font-size:11.5px; color:var(--sub); line-height:1.7; margin-bottom:12px;}
+  .set-msg{font-size:12.5px; color:var(--ok); min-height:18px; margin-top:10px; font-weight:600;}
+  .set-msg.err{color:var(--bad);}
+  @media (max-width:480px){ .stat-tiles{grid-template-columns:repeat(2,1fr);} .flip3d{min-height:340px;} }
+  /* 设置弹窗（v10.22：设置不再平铺展示，点击设置图标弹出） */
+  #settingsModal{position:fixed; inset:0; z-index:200; background:rgba(15,23,42,.45); display:none; align-items:center; justify-content:center; padding:18px;}
+  .settings-card{background:#fff; border-radius:16px; max-width:560px; width:100%; max-height:88vh; overflow:auto; padding:20px 20px 24px; box-shadow:0 20px 60px rgba(15,23,42,.25);}
+  .settings-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;}
+  .settings-head h3{margin:0; font-size:16px; color:#182848;}
+  .settings-close{background:#eef2ff; border-radius:8px; width:30px; height:30px; line-height:1; color:#2e5bff; border:none; cursor:pointer; font-size:14px; flex:0 0 auto;}
+  .settings-close:hover{background:#e0e7ff;}
+</style>
+</head>
+<body>
+<div id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo">AI</div>
+    <h2>AI PM 知识打卡站</h2>
+    <div id="authMsg" class="auth-msg"></div>
+    <p id="cloudTip" class="auth-msg" style="display:none"></p>
+    <button class="auth-btn" data-act="cloud-retry" id="retryBtn" style="display:none;">重试连接</button>
+    <div id="authFormBox">
+      <input id="authUser" class="auth-input" placeholder="邮箱账号（如 name@example.com）" maxlength="64" autocomplete="username">
+      <input id="authPw" class="auth-input" type="password" placeholder="密码（8-16 位，含字母和数字）" maxlength="16" autocomplete="current-password">
+      <input id="authPw2" class="auth-input" type="password" placeholder="确认密码" maxlength="16" style="display:none" autocomplete="new-password">
+      <div id="authVcodeRow" style="display:none; gap:8px; margin-bottom:12px;">
+        <input id="authVcode" class="auth-input" style="flex:1; margin:0; min-width:0" placeholder="邮箱验证码" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+        <button id="btnSendCode" class="auth-btn-send" data-act="auth-send-code">获取验证码</button>
+      </div>
+      <button class="auth-btn" data-act="auth-submit" id="authSubmit">注 册</button>
+      <div class="auth-tabs">
+        <button class="auth-tab on" data-act="auth-tab" data-mode="login">登录</button>
+        <button class="auth-tab" data-act="auth-tab" data-mode="register">注册</button>
+      </div>
+    </div>
+    <p class="auth-tip">账号与学习进度已自动保存，本设备30天免登录</p>
+  </div>
+</div>
+<div class="wrap">
+  <header>
+    <div class="logo">
+      <div class="avatar"><span class="avatar-txt" id="avatarInitial">A</span></div>
+      <div>
+        <h1>AI PM 知识打卡站</h1>
+      </div>
+    </div>
+    <div class="head-right">
+      <button class="settings-btn" id="userChip" data-act="settings-open" title="设置（点击打开）" aria-label="设置">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </button>
+      <div class="streak-chip"><span id="streakNum">0</span><span style="font-size:11px;color:var(--sub);font-weight:400">天</span></div>
+      <button class="logout-btn" data-act="logout" title="退出登录">退出</button>
+    </div>
+  </header>
+  <div class="date-line" id="dateLine"></div>
+  <nav>
+    <button data-act="tab" data-view="today" class="on">今日打卡</button>
+    <button data-act="tab" data-view="lib">知识库</button>
+    <button data-act="tab" data-view="stats">统计</button>
+  </nav>
+
+  <section id="view-today"></section>
+  <section id="view-lib" style="display:none"></section>
+  <section id="view-stats" style="display:none"></section>
+  <section id="view-ai" style="display:none"></section>
+
+  <div id="settingsModal">
+    <div class="settings-card">
+      <div class="settings-head">
+        <h3>设置</h3>
+        <button class="settings-close" id="settingsClose" data-act="settings-close" title="关闭">✕</button>
+      </div>
+      <div id="settingsBody"></div>
+    </div>
+  </div>
+
+  <div class="foot">内容持续更新中</div>
+</div>
+
+<script>
+/* 自诊断引导：脚本未启动或运行出错时，在登录卡片上直接可见，方便定位问题 */
+window.__dodoBooted = false;
+window.onerror = function(m, s, l){
+  try{
+    var el = document.getElementById('authMsg');
+    if(el){ el.textContent = '页面出错了：' + (m || '未知错误'); el.className = 'auth-msg err'; }
+  }catch(e){}
+};
+setTimeout(function(){
+  if(window.__dodoBooted) return;
+  try{
+    var el = document.getElementById('authMsg');
+    if(el){ el.textContent = '应用脚本未启动：请先关闭本旧页面，重新下载最新版文件打开；仍不行请把此提示反馈给 dodo'; el.className = 'auth-msg err'; }
+  }catch(e){}
+}, 2500);
+</script>
+<script>
+/* ---------------- CloudBase 纯云端模式 ----------------
+ * v11.21：注册页验证码行与「注册」按钮之间增加间隙——
+ *       #authVcodeRow 加 margin-bottom:12px，与其他输入框间距一致。
+ * v11.20：注册页验证码输入框与「获取验证码」按钮同一水平线——
+ *       align-items:stretch 让按钮与输入框等高，按钮去掉 margin-bottom、改用
+ *       上下 0 内边距（文字默认垂直居中），两侧视觉严格对齐。
+ * v11.19：验证码发送失败后「获取验证码」按钮进入 10 秒冷却再重试——
+ *       云开发邮件服务限 10 封/分钟，防止快速连点触发送信限流。
+ * v11.18：验证码发送失败 / 注册失败时，界面保持短提示，
+ *       完整错误同时输出到浏览器控制台（F12→Console），便于定位根因。
+ * v11.17：失败提示进一步精简——验证码发送失败只显示「验证码发送失败」，
+ *       注册失败只显示「注册失败」（不再拼接云端长串原因；线路不可达仍自动切备用线路），
+ *       验证码输入框与「获取验证码」按钮强制同一行（flex-wrap:nowrap + min-width:0）。
+ * v11.16：验证码发送失败提示精简——SDK 把 code=unreachable 包在 [SERVICE_ERROR] 的
+ *       message 里时同样按「网络不可达」处理（自动切备线重发一次 + 短提示
+ *       「网络错误，请检查网络后重试」），其他失败统一短提示「验证码发送失败，请稍后重试」，
+ *       不再展示云端长串文案。
+ * v11.15：邮箱验证码输入框占位文案精简为「邮箱验证码」——不再显示括号内的格式说明。
+ * v11.14：移除「连接诊断」入口——认证页不再显示诊断按钮/面板（runDiag 等已删除）；
+ *       线路探测与自动切换（probeReach/pickBestOrigin/switchToAltOrigin）保留，
+ *       作为注册登录自动重试的兜底逻辑。
+ * v11.13：登录失败提示精简——只区分两类：网络错误（提醒检查网络）与
+ *       账号密码问题（「邮箱或密码不正确，请重试」），不再展示云端长串配置文案。
+ * v11.12：注册模式输入即校验——密码（8-16 位含字母和数字）与二次密码（一致性）
+ *       在用户输入每一个字符时实时给出提示（authLiveCheck），无需等到提交/发送验证码。
+ * v11.11：切换 tab 与下方账号（邮箱）输入框之间留出空隙（margin-bottom:12px）。
+ * v11.10：登录/注册切换 tab 移至表单最上方（输入框之上）：
+ *       切换 → 邮箱 → 密码 →（注册模式加：确认密码 → 验证码）→ 提交按钮，
+ *       提交按钮仍位于「连接诊断」链接之上、输入框之后。
+ * v11.9：修复表单 order 排序——提交按钮与登录/注册切换未设 order（默认 0），
+ *       在 flex 列布局中会排到所有输入框之前；现全部显式指定 order，
+ *       保证「输入框在前、提交按钮在后、连接诊断在最底」。
+ * v11.8：邮箱即用户名——注册/登录不再需要单独的用户名字段，直接用邮箱作为账号：
+ * 注册：邮箱 + 密码（8-16 位，含字母和数字）+ 确认密码 + 邮箱验证码（1 分钟内有效，60 秒重发倒计时）；
+ * 登录：输入邮箱 + 密码 → 先查 users 集合确认账号存在（账号不存在提示「请先注册」，
+ *       密码错误提示「可重新输入」）→ 用邮箱校验密码登录；
+ *       集合无读权限时降级为直接登录，由云端判定（兼容「仅创建者可读写」权限）。
+ * v11.7：注册/登录流程按「注册流程 / 登录流程」重做（含用户名方案，v11.8 起以邮箱为唯一账号）。
+ * v11.6：注册制 + 本设备 30 天免登录——第一次进入必须注册邮箱账号（无匿名账号），
+ * 注册/登录成功后本设备保存登录时间戳，30 天内再次打开直接进入；超过 30 天需重新登录。
+ * 进度一律存云端（user_progress 集合按账号隔离），本地仅缓存提速；
+ * 用户数据（邮箱/昵称/首次注册时间/最近登录时间）在注册与登录成功后写入 users 集合（doc = uid），
+ * 与进度一致按账号隔离，换设备用同一邮箱登录即自动带出。
+ * SDK 加载 / 联网失败时展示「重试连接」界面，不会降级本地模式。
+ * 【v11.6 精简】认证页只保留标题 + 输入框 + 一行提示（账号与学习进度已自动保存，本设备30天免登录），
+ *   移除副标题等冗长描述（authCloudState 元素与 showAuth 中的赋值一并删除）。
+ * 【v11.5 修复】线路探测改用 fetch(mode:'no-cors')：v11.3/v11.4 用 XHR 探测域名根路径，
+ * 而腾讯云对根路径 / 的响应不带 Access-Control-Allow-Origin 头，浏览器 CORS 策略会拦截响应
+ * （status=0），导致网络正常也被误判为「两条线路都不可达」，页面卡在「无法连接云开发服务」。
+ * no-cors 模式只要服务器有响应即 resolve（opaque），仅网络层失败才 reject，不再误报。
+ * 网络不可达（code=unreachable）时自动切换备用线路：通过 SDK 官方 registerEndPoint
+ * 接口在「经典域（tcb-api.tencentcloudapi.com）/ 网关域（api.tcloudbasegateway.com）」
+ * 之间做真实切换（v11.2 的 fetch 重写对 SDK 的 XHR 请求无效，已废弃），并自动重试。
+ * 认证页提供「连接诊断」按钮：逐项检查 SDK 加载 / 双线路 / 云数据库集合，定位注册失败根因。
+ * 换设备 / 清缓存：用同一邮箱 + 密码登录即找回进度。
+ * -------------------------------------------------- */
+var CLOUDBASE_CFG = { env: 'hxy-d6gkkkkyhe447e9dd', region: 'ap-shanghai' };
+/* 固定到 3.10.1（已验证可用的版本），避免 latest 命中浏览器旧缓存 */
+var CLOUDBASE_SDK_URL = 'https://static.cloudbase.net/cloudbase-js-sdk/3.10.1/cloudbase.full.js?v=20260930';
+/* ---------------- 知识库数据 ---------------- */
+var CATS = {
+  llm:{name:'大模型基础'},
+  prompt:{name:'提示工程'},
+  rag:{name:'RAG 与知识'},
+  agent:{name:'Agent 智能体'},
+  train:{name:'训练与优化'},
+  eval:{name:'评测与质量'},
+  backend:{name:'后端与接口'},
+  frontend:{name:'前端与体验'},
+  arch:{name:'架构与工程'},
+  pm:{name:'产品方法论'},
+  safe:{name:'安全与合规'},
+  coding:{name:'Coding 与工程'},
+  interview:{name:'面试与实战'}
+};
+
+var CARDS = [
+{id:'c01',cat:'llm',term:'大语言模型（LLM）',brief:'基于海量文本预训练的深度神经网络，通过「预测下一个词」涌现出理解与生成能力。',points:['参数规模从数十亿到万亿级，能力随规模与数据质量提升','本质是概率预测，输出具有不确定性','作为通用底座，通过提示词、检索、微调适配具体任务'],pm:'PM 要把 LLM 当作「概率生成器」：产品设计必须容忍错误，提供重试、编辑与反馈入口。'},
+{id:'c02',cat:'llm',term:'Token 与上下文窗口',brief:'Token 是模型处理文本的最小单位，上下文窗口是模型一次能「看到」的最大 Token 数。',points:['中文约 1 个字 ≈ 0.6～1.5 个 token，API 按 token 计费','窗口从 4K 到百万级 token 不等，长窗口通常更贵、更慢','超出窗口需截断、摘要压缩或改用 RAG'],pm:'上下文长度直接决定产品能力边界（长文档总结、超长对话），也是成本核算的基础单位。'},
+{id:'c03',cat:'llm',term:'预训练 → SFT → RLHF',brief:'大模型训练三阶段：预训练学知识，监督微调（SFT）学听指令，人类反馈强化学习（RLHF）对齐人类偏好。',points:['预训练消耗算力最大，决定模型基础能力','SFT 用高质量问答对教模型「怎么回答」','RLHF/RLAIF 让输出更有用、无害、诚实'],pm:'评估模型宣传时先分清：是基座模型还是对齐后的对话模型，两者能力与合规特性差异巨大。'},
+{id:'c04',cat:'llm',term:'大模型幻觉',brief:'模型一本正经地编造事实的现象，根源在于它是概率预测而非数据库检索。',points:['知识盲区、模糊提问、诱导性提示都会放大幻觉','缓解手段：RAG 挂知识库、要求引用溯源、置信度提示、人工审核','高风险领域（医疗、法律、金融）幻觉代价极高'],pm:'幻觉是 AI 产品信任的头号杀手，兜底策略与免责/纠错设计必须写进 PRD。'},
+{id:'c05',cat:'llm',term:'温度与采样参数',brief:'Temperature、Top-p 等参数控制输出的随机性与创造性。',points:['温度低 → 稳定可复现，适合分类、抽取、结构化任务','温度高 → 多样有创意，适合文案、头脑风暴','Top-p 控制候选词范围，与温度二选一调即可'],pm:'产品里不同功能应配不同参数：工单分类用低温，营销文案用高温，这是零成本提升体验的手段。'},
+{id:'c06',cat:'llm',term:'推理模型（慢思考）',brief:'先产生长思维链再给答案的模型（如 o 系列、R1 类），擅长数学、代码与复杂推理。',points:['回答前有可见/不可见的思考过程','延迟与成本比普通模型高数倍','适合复杂决策分析，不适合简单闲聊与高并发轻任务'],pm:'按任务难度做模型路由：简单任务走普通模型，复杂任务切推理模型，兼顾体验与成本。'},
+{id:'c07',cat:'llm',term:'多模态大模型',brief:'同时理解或生成文本、图像、音频、视频等多种模态的模型。',points:['典型任务：图像理解、OCR、语音对话、视频分析','原生多模态训练 vs 多模型拼接管线，效果与延迟差异大'],pm:'多模态打开新场景（拍照问答、会议纪要、审图质检），但需重点评估单次调用成本与延迟。'},
+{id:'c08',cat:'llm',term:'参数量与模型规格',brief:'7B / 70B 指模型参数数量级，通常参数越大能力越强，但成本与延迟也越高。',points:['参数量 ≠ 效果，数据质量与训练方法同样关键','小模型 + 高质量数据常能胜过大模型 + 差数据'],pm:'选型时在效果、成本、延迟的三角中权衡；端侧与私有化场景通常选小模型。'},
+{id:'c09',cat:'llm',term:'Scaling Law 与涌现能力',brief:'模型能力随参数、数据、算力增长可预测地提升；某些能力在规模跨过阈值后「涌现」。',points:['涌现具有突发性：小模型测不出 ≠ 大模型不行','也带来能力不可完全预测的挑战'],pm:'评估供应商时看其 Scaling 路线图，今天做不到的能力明年可能原生支持，架构要留余地。'},
+{id:'c10',cat:'llm',term:'概率性与一致性',brief:'同一输入多次输出可能不同，这是 LLM 的本质特性而非 Bug。',points:['可通过降低温度、固定随机种子提升一致性','关键流程要设计人工确认或多次投票机制'],pm:'管理用户预期：宣传上避免「100% 准确」话术，交互上让用户可重试、可编辑、可反馈。'},
+{id:'c11',cat:'llm',term:'长上下文 vs RAG 的抉择',brief:'长上下文窗口普及后，是「全量塞进提示词」还是「检索后再生成」的经典取舍。',points:['长上下文：实现简单、信息全量、适合一次性长文本','RAG：成本低、知识可实时更新、可溯源','混合方案：先检索，长上下文做兜底'],pm:'长文本处理（合同、论文）优先长窗口；高频知识问答优先 RAG，成本与更新频率是决策变量。'},
+
+{id:'c12',cat:'prompt',term:'提示词工程（Prompt Engineering）',brief:'通过设计与优化提示词，稳定、高效地引导模型输出的方法论。',points:['核心技巧：角色设定、任务拆解、格式约束、给出示例','提示词是 AI 产品中最核心的「活代码」，需要持续迭代'],pm:'Prompt 即产品：改提示词的投入产出比常常高于改代码，必须建立版本管理与评测流程。'},
+{id:'c13',cat:'prompt',term:'系统提示词与用户提示词',brief:'System Prompt 设定模型角色与规则，优先级高于用户的 User Prompt。',points:['系统提示词定义人设、能力边界、输出格式与安全规则','对最终用户不可见，是产品体验差异化的关键资产'],pm:'竞品之间的「性格」差异多半藏在系统提示词里；同时必须防提示词被注入绕过。'},
+{id:'c14',cat:'prompt',term:'Few-shot 少样本学习',brief:'在提示词中给模型几个输入输出示例，让它模仿格式、风格与判断标准。',points:['零样本 < 单样本 < 少样本，示例质量重于数量','示例应覆盖典型场景与边界 case'],pm:'沉淀真实优质 case 做示例库，是快速提升垂直场景效果的通用手段。'},
+{id:'c15',cat:'prompt',term:'思维链（CoT）',brief:'让模型「一步步想」再给答案，可显著提升推理类任务的准确率。',points:['经典句式：Let\u2019s think step by step','可与 Few-shot 结合，给出带推理过程的示例','新一代推理模型已把思维链内化'],pm:'对准确性敏感的流程（审批、诊断、核算）引导分步输出，中间步骤可供人工核查。'},
+{id:'c16',cat:'prompt',term:'结构化输出（JSON Mode）',brief:'约束模型按固定 JSON / 格式输出，便于下游程序稳定解析。',points:['用 JSON Schema 做输出约束','解析失败要有重试与兜底逻辑','配合 Function Calling 使用更稳定'],pm:'AI 输出要接入业务流程，必须先约定结构化协议，这是与前后端联调的基础。'},
+{id:'c17',cat:'prompt',term:'提示词注入攻击',brief:'用户或外部内容中藏匿指令，诱导模型忽略系统规则（Prompt Injection）。',points:['典型句式：「忽略以上所有指令」','网页、文档、邮件等外部内容都可能携带注入'],pm:'凡处理外部内容的 AI 功能，必须做注入防护与权限最小化，这是安全评审必备项。'},
+
+{id:'c18',cat:'rag',term:'RAG 检索增强生成',brief:'先从知识库检索相关内容，再交给模型生成回答——让模型「开卷考试」。',points:['显著缓解幻觉，知识可实时更新，答案可溯源','效果 = 检索质量 × 生成质量，两端都要抓'],pm:'企业知识问答类产品的默认架构选型；检索不行，模型再强也没用。'},
+{id:'c19',cat:'rag',term:'Embedding 向量嵌入',brief:'把文本映射成高维向量，语义相近的文本在向量空间中距离更近。',points:['用于语义检索、聚类、去重、推荐','不同模型的向量空间不通用，混用会失效'],pm:'语料切分方式与嵌入模型选型直接决定搜索体验，值得单独建评测集。'},
+{id:'c20',cat:'rag',term:'向量数据库',brief:'专门存储向量并支持相似度检索的数据库（如 Milvus、FAISS 类引擎）。',points:['核心指标：召回率、延迟、可支撑规模','实践中常与关键词检索混合使用'],pm:'技术选型不必过度纠结，重点是建立「检索效果」评测集来量化体验。'},
+{id:'c21',cat:'rag',term:'文档切分（Chunking）',brief:'把长文档切成适合检索的小块，是 RAG 效果的第一道关口。',points:['按语义/标题切分优于固定长度硬切','块太大会引入噪声，太小则上下文缺失','保留标题层级等元数据有助于理解块含义'],pm:'用户反馈「答非所问」时，先查切分与检索环节，再怀疑模型能力。'},
+{id:'c22',cat:'rag',term:'重排（Rerank）',brief:'用更精细的模型对初筛结果重新排序，提升 Top 结果的相关性。',points:['两阶段架构：召回（快而广）+ 精排（准而贵）','对最终答案质量提升显著'],pm:'效果不够好时，加 Rerank 通常是性价比最高的优化之一。'},
+{id:'c23',cat:'rag',term:'RAG 效果评估',brief:'从检索与生成两端评估：召回命中率、忠实度、答案相关性等。',points:['检索端看 Hit Rate / MRR 等指标','生成端看 Faithfulness（是否忠于材料）','构建评测集，每次改动做回归'],pm:'「感觉不准」无法运营，要建评测集把效果变成可跟踪的数字。'},
+{id:'c24',cat:'rag',term:'混合检索',brief:'关键词检索（BM25）与向量语义检索并用，互补短板。',points:['关键词负责精确匹配：型号、编号、术语','向量负责同义改写与语义泛化','常用 RRF 等方法融合两路结果'],pm:'专业术语、产品型号密集的领域，混合检索几乎是必选项。'},
+{id:'c25',cat:'rag',term:'GraphRAG 与知识图谱',brief:'用图结构组织知识实体与关系，支持多跳推理的 RAG 进阶方案。',points:['核心概念：实体-关系-三元组','解决「多跳问题」（A 与 C 的间接关系），如微软 GraphRAG 方案','知识构建成本较高，适合强关联、高价值领域'],pm:'医疗、金融等强关联场景值得投入；通用场景先用传统 RAG 就能覆盖多数需求。'},
+
+{id:'c26',cat:'agent',term:'AI Agent 智能体',brief:'能感知环境、自主规划、调用工具、执行多步任务以达成目标的 AI 系统。',points:['基本构成：模型 + 记忆 + 工具 + 规划','与问答机器人的本质区别：能「行动」而不只是「回答」'],pm:'Agent 产品的设计重点是：任务分解可视、过程可控、失败可回滚。'},
+{id:'c27',cat:'agent',term:'Function Calling 工具调用',brief:'模型根据对话判断何时调用哪个外部函数，并生成结构化调用参数。',points:['模型只输出「调用意图 + 参数」，实际执行由应用层完成','是 Agent 连接真实世界的「手脚」'],pm:'工具集设计 = Agent 产品的能力边界；每个工具都要定义清晰的入参、出参与报错行为。'},
+{id:'c28',cat:'agent',term:'MCP 协议',brief:'Model Context Protocol，连接 AI 应用与外部工具/数据源的开放标准。',points:['一次接入、多方复用，被称为「AI 的 USB-C 接口」','生态中已有大量现成 MCP Server 可直接使用'],pm:'集成企业内部系统时，先看有没有现成 MCP Server，能大幅降低联调成本。'},
+{id:'c29',cat:'agent',term:'ReAct 模式',brief:'推理（Reason）与行动（Act）交替进行的 Agent 基本工作循环。',points:['流程：想 → 做 → 看结果 → 再想 → …','配合工具调用完成多步任务'],pm:'理解 ReAct 有助于设计 Agent 的过程展示：让用户看到它在想什么、做了什么。'},
+{id:'c30',cat:'agent',term:'多智能体协作',brief:'多个各司其职的 Agent 通过分工、讨论、相互审查协作完成复杂任务。',points:['常见角色：规划者、执行者、批评者/审查者','成本更高，但复杂任务可靠性可提升'],pm:'复杂流程可拆成「主管 + 专员」结构，同时警惕误差在多 Agent 间传递放大。'},
+{id:'c31',cat:'agent',term:'Agent 记忆机制',brief:'短期记忆 = 当前上下文窗口；长期记忆 = 外置存储（向量库/数据库）按需检索召回。',points:['记忆的写入、检索、遗忘策略决定个性化体验','必须有记忆纠错与清理机制'],pm:'「记住我」是杀手级体验，但记错比不记更糟，记忆管理需要专门设计。'},
+{id:'c32',cat:'agent',term:'任务分解与规划',brief:'Agent 把大目标拆解为可执行子任务的能力，是复杂任务成败的关键。',points:['常用方法：思维链分解、计划-执行分离、反思重试'],pm:'产品上要把计划暴露给用户确认后再执行，避免 Agent 自作主张跑偏。'},
+{id:'c33',cat:'agent',term:'Agent 编排框架',brief:'对 Agent 工作流做结构化编排的框架（如 LangGraph 等），支持状态、分支与人工介入。',points:['图编排：节点 + 边，流程显式可读','支持保存状态、断点续跑、人工审批节点','比 hardcode 更可观测、可回滚、可调试'],pm:'复杂业务流程用编排框架而非硬编码，出问题时能定位到具体节点。'},
+
+{id:'c34',cat:'train',term:'微调（Fine-tuning）',brief:'用领域数据继续训练模型，让它在特定任务或风格上表现更好。',points:['数据质量 > 数量，数千条高质量样本常有明显效果','可能损伤通用能力（灾难性遗忘）'],pm:'先用提示词 + RAG 打样，效果到顶再考虑微调——它是「最后一公里」手段。'},
+{id:'c35',cat:'train',term:'LoRA 高效微调',brief:'冻结原模型、只训练少量附加参数的低成本微调方法。',points:['显存需求大幅下降，单卡即可训练','适配器可插拔、可合并，灵活切换'],pm:'让小团队「定制自己的模型」成为可能，预算评估可按 LoRA 口径估算。'},
+{id:'c36',cat:'train',term:'知识蒸馏',brief:'用大模型（教师）的输出训练小模型（学生），把能力「压缩」进小模型。',points:['小模型成本低、延迟低、易部署','效果可逼近教师模型的特定能力'],pm:'产品规模化降本的标准路径：先用大模型验证价值，再蒸馏成小模型上线。'},
+{id:'c37',cat:'train',term:'量化（Quantization）',brief:'降低模型参数数值精度（如 FP16 → INT8 / 4bit），以减小体积、加速推理。',points:['4bit 量化后 7B 模型可跑在消费级设备','通常带来少量精度损失，需评测验证'],pm:'端侧部署与私有化交付报价时，量化程度直接影响硬件成本估算。'},
+{id:'c38',cat:'train',term:'数据飞轮',brief:'用户使用产生数据 → 数据改进模型 → 体验更好 → 吸引更多用户的正循环。',points:['关键在于设计数据回收埋点：纠错、采纳、标注','飞轮转起来后形成数据护城河'],pm:'从第一天就设计反馈闭环，这是 AI 产品最深、最难复制的护城河。'},
+{id:'c39',cat:'train',term:'端侧模型',brief:'部署在手机 / PC 本地运行的小模型，隐私好、离线可用、无调用成本。',points:['受限于设备算力，能力弱于云端旗舰模型','常见规格：1B～7B 的量化模型'],pm:'隐私敏感（输入法、笔记）与离线场景首选端侧，云端负责复杂任务——混合架构是主流。'},
+{id:'c40',cat:'train',term:'合成数据',brief:'用模型生成训练数据，解决真实数据稀缺与隐私问题，是数据飞轮的引擎。',points:['典型流程：生成 → 清洗 → 筛选 → 验证','模型自我对弈（如 AlphaGo 式）产生超人类数据','数据质量需持续监控'],pm:'合成数据要防「模型学自己」退化，需用真实数据做锚点并抽检质量。'},
+
+{id:'c41',cat:'eval',term:'评测集（Benchmark）',brief:'为产品任务定制的一批「标准考题 + 参考答案」，用于量化模型与版本效果。',points:['必须覆盖真实场景与边界 case','线上 badcase 定期回流进评测集'],pm:'评测集是 AI 团队最重要的资产之一：换模型、调提示词都要「以考代评」。'},
+{id:'c42',cat:'eval',term:'LLM-as-Judge',brief:'用更强的模型给输出打分，替代部分人工评估，实现规模化评测。',points:['必须写清楚评分标准（rubric）','存在位置偏差、自我偏好等坑，需抽样人工校准'],pm:'让评测从「拍脑袋」变成可规模化的日常动作，关键版本仍需人工盲测兜底。'},
+{id:'c43',cat:'eval',term:'人工评估与盲测',brief:'让人（最好不知道哪份是新版本）对比多个输出做偏好选择。',points:['双盲 A/B 对比是最可信的主观评估方式','标注一致性要抽检（如 Kappa 系数）'],pm:'上线前的「人肉回归」不可省，尤其涉及品牌形象的对外生成内容。'},
+{id:'c44',cat:'eval',term:'线上效果指标',brief:'衡量 AI 功能真实价值的业务指标：采纳率、重试率、编辑距离、留存等。',points:['采纳率 = 用户接受 AI 结果的比例','重试率高往往说明效果差','编辑距离衡量用户修改 AI 输出的成本'],pm:'不要只看调用量，要定义「成功」指标并在 UI 上完成埋点。'},
+{id:'c45',cat:'eval',term:'灰度与 A/B 实验',brief:'新模型 / 新提示词先小流量验证，用数据决定是否全量发布。',points:['AI 输出方差大，实验样本量要足够','设置自动回滚阈值：差评率、超时率超标即回退'],pm:'每次换模型都当作一次「发布」来管理，禁止未评测直接全量。'},
+{id:'c46',cat:'eval',term:'离线与在线评测分层',brief:'评测体系分两层：离线（发布前）与在线（发布后），各有侧重、互为闭环。',points:['离线：评测集回归、快速反馈、覆盖边界','在线：A/B 实验、指标监控、badcase 回流','两端闭环形成持续优化循环'],pm:'建立「离线 + 在线」双环评测机制，是 AI 产品持续进步的齿轮。'},
+
+{id:'c47',cat:'backend',term:'接口（API）与接口文档',brief:'系统之间通过接口通信，接口文档是前后端协作的「合同」。',points:['接口三要素：入参、出参、错误码','文档要维护版本、标注变更','Mock 数据是前后端并行开发的前提'],pm:'评审接口时先看错误码设计——它决定了产品出问题时用户看到什么。'},
+{id:'c48',cat:'backend',term:'RESTful 设计规范',brief:'用 URL 描述资源、用 HTTP 方法表达操作的设计风格。',points:['GET / POST / PUT / DELETE 对应查、增、改、删','状态码语义化：200 正常 / 400 参数错 / 404 不存在 / 500 服务错','RPC 风格更强调「动作」，适合内部系统'],pm:'与研发对齐接口风格能显著降低联调成本，产品需求里也要按资源视角描述数据。'},
+{id:'c49',cat:'backend',term:'鉴权与认证',brief:'确认「你是谁、你能访问什么」的机制：登录、Token、权限控制。',points:['认证（Authentication）确认身份，授权（Authorization）确认权限','JWT 无状态、Session 有状态，各有适用场景','SSO 单点登录、RBAC 基于角色的权限控制'],pm:'权限模型必须在需求阶段定清楚（角色、数据范围、审计），越晚改越贵。'},
+{id:'c50',cat:'backend',term:'幂等性（Idempotency）',brief:'同一请求执行多次结果一致，是交易、通知、AI 生成类接口的关键设计。',points:['靠幂等键（Idempotency-Key）、唯一约束实现','防止重复下单、重复扣款、重复通知','是网络超时自动重试的基石'],pm:'支付、积分、AI 生成等重复提交场景，必须在 PRD 里提幂等要求。'},
+{id:'c51',cat:'backend',term:'限流与熔断',brief:'保护系统不被流量打垮的手段：限流、熔断、降级、隔离。',points:['限流算法：令牌桶、漏桶','熔断：防止雪崩连锁故障','降级：保核心、弃边缘，快速失败'],pm:'营销活动、模型调用超限时的自动降级表现，要写进产品说明与客服手册。'},
+{id:'c52',cat:'backend',term:'并发：进程 / 线程 / 协程',brief:'同时处理多个任务的执行模型，是理解服务性能的基本功。',points:['进程 = 资源隔离，线程 = 共享内存，协程 = 用户态轻量调度','并发 ≠ 并行，单核也能高并发','GIL、阻塞/非阻塞、事件循环是高频概念'],pm:'「系统为什么慢」常出在并发热点：锁竞争、数据库连接池、单点服务。'},
+{id:'c53',cat:'backend',term:'事务与 ACID',brief:'保证数据库操作「全成或全败」的机制：原子性、一致性、隔离性、持久性。',points:['ACID 四特性，隔离级别与脏读/幻读','分布式事务：2PC、Saga、TCC 等方案','补偿机制：失败后如何复原'],pm:'涉及钱、积分、状态变更的操作必须事务化，PRD 要描述失败补偿路径。'},
+{id:'c54',cat:'backend',term:'缓存与一致性',brief:'用高速存储（如 Redis）降低延迟、保护数据库，同时要处理数据一致性问题。',points:['三大坑：缓存穿透、击穿、雪崩','更新策略：先更新库再删缓存','TTL 与过期策略决定数据新鲜度'],pm:'榜单、配置等热点数据要明确时效性要求，是体验与成本的平衡。'},
+{id:'c55',cat:'backend',term:'消息队列（MQ）',brief:'异步解耦、削峰填谷、数据分发的中间件（Kafka / RabbitMQ 等）。',points:['生产者-消费者模型，削峰填谷','三大挑战：消息不丢、不重、有序','死信队列处理失败消息'],pm:'异步化提升体验（先返回、后处理），但要给用户明确的「处理中」状态反馈。'},
+{id:'c56',cat:'backend',term:'数据库选型：SQL 与 NoSQL',brief:'关系型（MySQL / PostgreSQL）与文档、键值、图数据库的取舍。',points:['SQL：强事务、强一致，适合结构化业务数据','NoSQL：灵活、易扩展，适合海量非结构化数据','索引是查询性能的根本，但会拖慢写入'],pm:'选型只问研发三个问题：数据量级、一致性要求、查询模式。'},
+{id:'c57',cat:'backend',term:'微服务架构',brief:'按业务边界拆分为独立服务，独立部署、独立扩容，适合大团队大业务。',points:['好处：解耦、独立发布、故障隔离','代价：分布式一致性、链路排查、运维复杂度','康威定律：架构是组织结构的映射'],pm:'拆服务要克制，别为拆而拆；先问「多久发一次版、多少人一个仓」。'},
+{id:'c58',cat:'backend',term:'网关与 BFF',brief:'统一入口负责鉴权、限流、路由；BFF 面向特定端做数据聚合与裁剪。',points:['API 网关：鉴权、限流、灰度、日志','BFF（Backend For Frontend）：解决一个页面要拼多个接口','移动端弱网下接口数量直接影响加载速度'],pm:'BFF 设计要有产品参与——接口瘦身就是移动端体验优化。'},
+
+{id:'c59',cat:'frontend',term:'浏览器渲染原理',brief:'从 HTML 到像素的流程：解析 → 布局 → 绘制 → 合成，重排/重绘是性能关键词。',points:['首屏关键指标：FCP、LCP、FP','重排（Layout）代价 > 重绘（Paint）','JS 会阻塞文档解析，脚本加载策略影响首屏'],pm:'「为什么页面白屏」先查资源体积与接口耗时——前端性能就是体验的第一米。'},
+{id:'c60',cat:'frontend',term:'前后端分离与 SPA',brief:'前端负责渲染与交互、后端只出数据，页面跳转变数据更新。',points:['SPA 单页应用：体验顺滑、断点续传','取舍：SEO 较弱、首屏加载更重','API 先行，前后端可完全并行开发'],pm:'提需求时约定好接口格式，前后端就能并行，整体排期可明显压缩。'},
+{id:'c61',cat:'frontend',term:'WebSocket 与 SSE',brief:'服务端主动推数据的方式：全双工（WebSocket）与单向流（SSE）。',points:['WebSocket：双向通信，适合聊天、协同编辑','SSE：单向流，实现简单，适合 AI 流式输出、通知','轮询是低效兜底，能推则推'],pm:'AI 聊天的「打字机」效果靠流式推送，网络差时的降级体验要在 PRD 里写明。'},
+{id:'c62',cat:'frontend',term:'首屏性能优化',brief:'让页面更快可用的手段：压缩、缓存、懒加载、骨架屏、CDN。',points:['核心指标：LCP、CLS、INP','图片压缩与 WebP、代码分割与按需加载','控制第三方脚本数量'],pm:'性能是留存率的一部分：定下指标（首屏 < 2s）并持续跟踪，比口头重视有效。'},
+{id:'c63',cat:'frontend',term:'响应式与多端适配',brief:'一套代码适配手机 / 平板 / 桌面，或按端开发独立版本。',points:['断点与弹性布局、移动优先','App / 小程序 / Web 三端体验差异','按端裁剪功能：轻应用 vs 全功能'],pm:'多端策略（全量迁移 vs 轻量版本）是产品决策，不是纯技术决策。'},
+{id:'c64',cat:'frontend',term:'组件化与设计系统',brief:'把界面元素抽象为可复用组件与规范（按钮、表单、弹窗、反馈）。',points:['设计 Token：颜色、字号、间距统一管理','组件库保障一致性，提升迭代速度','设计系统 = 产品视觉的「宪法」'],pm:'设计系统让产品视觉统一，AI 新功能直接复用组件，可更快上线迭代。'},
+{id:'c65',cat:'frontend',term:'埋点与数据采集',brief:'在客户端记录用户行为并上报数据平台，是产品决策的数据基础。',points:['埋点类型：曝光、点击、漏斗、时长','事件模型 = 事件 + 属性','埋点验收要与版本上线同步'],pm:'需求评审时同步设计埋点方案；事后补埋点成本高，数据也不准确。'},
+{id:'c66',cat:'frontend',term:'流式输出与打字机效果',brief:'AI 逐字生成时边生成边展示，显著降低等待焦虑。',points:['基于 SSE / Chunked 传输实现','前端流式渲染，支持中断与继续','对计费、取消、重试策略有影响'],pm:'流式输出是 AI 产品标配体验，但「取消生成后是否计费」要想清楚。'},
+{id:'c67',cat:'frontend',term:'大文件上传与下载',brief:'分片、断点续传、秒传等技术解决大文件传输问题。',points:['分片上传 + 服务端合并','断点续传：网络恢复后接着传','秒传：哈希比对直接命中已有文件','下载大文件用预签名 URL 直传对象存储'],pm:'视频、数据集等大文件场景要有进度、失败重试与取消交互。'},
+{id:'c68',cat:'frontend',term:'可访问性与体验一致性',brief:'让产品对障碍人群可用、在异构环境中表现一致的实践。',points:['语义化标签、键盘导航、对比度达标','深色模式、字体缩放适配','国际化与多语言多时区规划'],pm:'无障碍是合规项也是口碑项，产品上线前用「无鼠标操作」自测一遍。'},
+
+{id:'c69',cat:'arch',term:'分布式系统与 CAP',brief:'分布式网络下，一致性、可用性、分区容错性三者不可兼得，必须权衡。',points:['CAP 三选二，网络分区是常态','BASE 理论：最终一致性','ACID 与 BASE 的场景取舍'],pm:'理解 CAP 就理解了「为什么有的系统短暂不可用、有的数据会延迟一致」。'},
+{id:'c70',cat:'arch',term:'高可用设计',brief:'通过冗余、故障自动切换、多活等机制让服务持续可用。',points:['可用性 99.9% ≈ 年停机 8.76 小时','冗余：多副本、多机房、多地域','容灾与演练：定期故障注入测试'],pm:'高可用等级是商业决策：SLA 承诺多少、愿意付多少成本，要明码标价。'},
+{id:'c71',cat:'arch',term:'负载均衡',brief:'把请求分发到多台机器，实现扩容量与防单点。',points:['四层（网络层）与七层（应用层）负载均衡','健康检查与自动摘除故障节点','会话粘性与水平扩展的取舍'],pm:'大促前扩容与压测，产品侧要配合流量预案，避免热点功能拖垮全站。'},
+{id:'c72',cat:'arch',term:'容器化与 Kubernetes',brief:'以容器为粒度打包部署，K8s 负责编排调度，是现代服务部署的事实标准。',points:['镜像 / 容器 / 编排三层概念','Pod 调度与水平扩缩容','服务发现、配置管理、滚动升级'],pm:'容器化让「环境一致、秒级扩容」成为可能，私有化交付也基于此实现。'},
+{id:'c73',cat:'arch',term:'CI/CD 流水线',brief:'持续集成（自动构建测试）与持续交付（自动部署上线）的工程实践。',points:['流水线：构建 → 单测 → 静态检查 → 部署 → 冒烟','流水线质量 = 团队的工程护城河','回归测试自动化释放人力'],pm:'提测到上线从「天」变「小时」，多版本快速试错才成为可能。'},
+{id:'c74',cat:'arch',term:'可观测性：监控 / 日志 / 追踪',brief:'通过指标（Metrics）、日志（Logs）、链路（Traces）掌握系统运行状态。',points:['黄金指标：延迟、流量、错误率、饱和度','告警要可行动：明确负责人与响应动作','全链路追踪定位「慢在哪个环节」'],pm:'AI 功能要建立专属监控：失败率、超时率、生成质量异常，出问题先看监控。'},
+{id:'c75',cat:'arch',term:'灰度发布与回滚',brief:'新版本先小范围验证、逐步放量，出问题可快速回退。',points:['灰度维度：按用户、比例、地域','蓝绿 / 金丝雀等发布策略','回滚机制与预案演练'],pm:'模型切换、Prompt 更新都要走灰度流程，和代码发布同等对待。'},
+{id:'c76',cat:'arch',term:'云原生与 Serverless',brief:'以云为基础构建运行应用；按需弹性的 Serverless 免运维思想。',points:['十二要素方法论','FaaS 函数即服务：按量计费、自动伸缩','代价：冷启动延迟、状态管理复杂'],pm:'弹性是大促与批量生成类业务的「省钱锦囊」，但要接受冷启动延迟。'},
+{id:'c77',cat:'arch',term:'LLM 应用架构（全链路）',brief:'大模型应用整体架构：接入层 → 编排层 → 模型层 → 知识/工具层 → 观测层。',points:['网关：鉴权、路由、降级、限流','编排层：提示词 + 流程 + 状态管理','模型路由：大小模型按任务分流','缓存、评测、安全护栏贯穿全链路'],pm:'能画一张应用架构图是 AI 产品经理的基本功，评审时先讲架构再讲功能。'},
+{id:'c78',cat:'arch',term:'上下文工程（Context Engineering）',brief:'与提示词工程并列的新范式：系统性地组织模型可用的全部上下文。',points:['权衡：超长上下文 vs RAG 的边界','上下文分区：指令、知识、状态、示例','上下文压缩、检索与精炼'],pm:'同一个模型，上下文设计得好坏就是「聪明」与「笨」的区别，值得专职投入。'},
+
+{id:'c79',cat:'pm',term:'AI 产品场景选择',brief:'选场景看三要素：高频刚需、容错空间、数据可得性。',points:['高容错场景（创作、辅助）先落地','低容错 + 强监管领域（如医疗诊断）需人机协同','先做「副驾驶」，再演进「自动驾驶」'],pm:'「用 AI 重做一遍」不如「找到 AI 比人强 10 倍的那个环节」。'},
+{id:'c80',cat:'pm',term:'Human-in-the-Loop 人机协同',brief:'AI 产出 + 人工确认/编辑的工作流，兼顾效率与可控性。',points:['分级自动化：置信度高自动执行，低则转人工','人只处理异常与关键决策'],pm:'设计好「人看什么、改什么、拍板什么」，别让用户沦为点确认的橡皮图章。'},
+{id:'c81',cat:'pm',term:'预期管理',brief:'AI 产品体验 = 实际效果 − 用户预期，管理预期与管理效果同样重要。',points:['首次体验定生死：引导正确使用姿势','用「置信度提示 / 可能出错」话术防止过度信任'],pm:'发布前想清楚 Demo 效果与日常效果的差距，避免宣传拉高预期后翻车。'},
+{id:'c82',cat:'pm',term:'Copilot 与 Autopilot',brief:'产品自动化程度的光谱：辅助人（Copilot）→ 监督下自动 → 全自动（Autopilot）。',points:['按错误代价选择自动化等级','随用户信任积累逐步放开权限'],pm:'路线图应体现自动化等级的演进节奏，而不是一步到位宣传全自主。'},
+{id:'c83',cat:'pm',term:'成本与定价',brief:'AI 产品按 token 计费，成本结构 = 推理成本 + 可能的微调 / 检索 / 人工成本。',points:['毛利 = 客单价 − 单次推理成本 × 使用频次','降本手段：缓存、大小模型路由、限额策略'],pm:'定价前先算清单位经济模型（一次请求成本），订阅制要防重度用户击穿成本。'},
+{id:'c84',cat:'pm',term:'模型选型：API / 开源 / 自研',brief:'三条路线：调 API 最快、开源自部署可控、自研壁垒最高但成本最大。',points:['多数产品从 API 起步快速验证','数据敏感或规模大时考虑开源私有化','避免早期锁死单一供应商'],pm:'选型是效果 / 成本 / 合规 / 时延的四维权衡，架构上保留模型可切换性（抽象网关层）。'},
+{id:'c85',cat:'pm',term:'Prompt 即产品',brief:'在 AI 应用里，提示词 + 知识库 + 工具配置共同构成「新的产品逻辑代码」。',points:['需要版本管理、评测回归、灰度发布等工程纪律','提示词改动的影响面等同于一次代码发布'],pm:'给 Prompt 建立与代码同等的研发流程，这是 AI 团队工程化成熟的分水岭。'},
+{id:'c86',cat:'pm',term:'兜底与降级策略',brief:'模型超时 / 失败 / 输出不合格时的备选路径：重试、换模型、模板兜底、转人工。',points:['所有 AI 功能必须有非 AI 兜底方案','监控失败率并自动切换降级链路'],pm:'PRD 里写清降级链路——「AI 挂了产品还能用」是上线底线。'},
+{id:'c87',cat:'pm',term:'需求澄清与方案评审',brief:'产品需求从模糊到清晰的过程：背景、场景、边界、验收标准一一对齐。',points:['评审老三样：背景要真、场景要实、优先级要清','AI 需求额外四件套：数据、模型、评测、兜底','好需求让研发一次做对'],pm:'AI 需求尤其要把评测标准写进验收，避免「感觉差不多」上线。'},
+{id:'c88',cat:'pm',term:'AI 产品的冷启动与增长',brief:'从 0 到 1 的 AI 产品如何获得第一批用户与数据。',points:['种子用户与内部试跑','冷启动数据飞轮：先有数据再有体验','增长杠杆：效果外显、分享传播、激励设计'],pm:'AI 产品冷启动核心是「让效果可感知」——一条惊艳案例胜过一万条广告。'},
+
+{id:'c89',cat:'safe',term:'护栏（Guardrails）',brief:'在模型输入/输出外层叠加的规则与过滤器，拦截违规、危险、离题内容。',points:['分类：主题护栏、安全护栏、格式护栏','常见实现：规则引擎 + 小模型分类器组合'],pm:'护栏是产品合规的生命线，误拦率与漏拦率要平衡并持续评测。'},
+{id:'c90',cat:'safe',term:'数据隐私与合规',brief:'用户数据用于训练/推理时的合规要求：脱敏、授权、最小化收集。',points:['敏感信息（PII）进模型前必须脱敏','企业客户关注数据不出域、不留存','数据保留策略要对用户透明'],pm:'隐私设计要前置到 PRD（数据流图 + 权限表），后期返工代价极高。'},
+{id:'c91',cat:'safe',term:'生成内容标识与版权',brief:'AI 生成内容需按法规进行标识；训练数据与生成结果的版权风险需评估。',points:['国内已要求 AI 生成内容添加显式/隐式标识','图像、语音合成的版权与滥用风险更高'],pm:'面向公众的生成功能，标识与审核流程是上线检查项，不是可选项。'},
+{id:'c92',cat:'safe',term:'可解释性与透明度',brief:'让用户知道「AI 为什么这么说」：展示引用来源、推理步骤、置信度。',points:['引用溯源是建立信任最有效的手段之一','能力边界透明（能做/不能做什么）反而提升信任与留存'],pm:'把「来源可查、过程可见」作为信任设计的基本盘。'},
+{id:'c93',cat:'safe',term:'AI 伦理与可问责',brief:'AI 决策的影响与责任归属：偏见、公平、透明与问责机制。',points:['算法偏见与公平性评估','AI 决策的可解释与用户申诉通道','事故责任链：谁决策、谁担责、如何追责'],pm:'医疗等敏感领域 AI 是「建议」不是「决策」——把问责设计写进产品就是商业安全。'},
+
+{id:'c94',cat:'llm',term:'知识截止日期（Knowledge Cutoff）',brief:'模型训练数据的截止时间，之后的信息模型天然不知晓。',points:['模型无法自知「不知道」，常强行编造','实时信息须靠检索、联网或知识库补齐','产品需明确提示用户信息时效性'],pm:'涉及新闻、行情、政策等时效性内容的产品，必须设计实时信息入口与「数据截至日期」的提示。'},
+{id:'c95',cat:'llm',term:'生成长度限制（Max Tokens）',brief:'单次输出 token 数上限，超长内容会被截断。',points:['API 通过 max_tokens 等参数控制输出长度','长文需分段续写（多轮拼接）','输入加输出受上下文窗口总量约束'],pm:'报告、代码等长输出要预设分块生成与续写交互，并给用户明确的截断提示。'},
+{id:'c96',cat:'llm',term:'语义缓存（Semantic Cache）',brief:'对语义相近的重复提问直接命中缓存结果，省成本、降延迟。',points:['按语义相似度（向量距离）匹配而非字符精确匹配','适合高频 FAQ、固定模板类场景','需设计缓存失效与隐私策略'],pm:'客服问答、内部知识库等重复问题集中场景，语义缓存是最直接的降本手段。'},
+{id:'c97',cat:'llm',term:'模型即服务（MaaS）与推理服务',brief:'模型以 API 服务形式按量计费供给，厂商提供差异化规格与保障。',points:['常见分级：旗舰版 / 轻量版 / 低价版','SLA 与限流策略直接影响稳定性','多供应商可切换，降低单一依赖风险'],pm:'选型综合效果、价格、SLA、数据合规四要素，并保留可替换的模型抽象层。'},
+{id:'c98',cat:'llm',term:'长尾知识与低频场景',brief:'模型对高频知识掌握较好，对冷门、小众内容容易出错。',points:['长尾问题（冷门术语、小众场景）幻觉率更高','用 RAG 与专有知识库补齐长尾','对长尾场景设置兜底与人工入口'],pm:'评估产品别只看演示案例，要重点压测真实业务里的长尾场景。'},
+
+{id:'c99',cat:'prompt',term:'角色设定（Role / Persona）',brief:'在提示词中为模型指定角色身份，规范语气与知识范围。',points:['「你是一位有十年经验的某领域专家」','角色越具体，输出越稳定','可同时约束「不能做什么」'],pm:'角色设定是产品人格化的表达，直接影响用户对产品的信任与喜爱度。'},
+{id:'c100',cat:'prompt',term:'提示词模板与变量注入',brief:'把提示词做成带变量的模板，动态填入用户内容与业务数据。',points:['变量用占位符（如 {{title}}）并做转义','模板需版本管理与回归测试','注意变量内容可能携带注入攻击'],pm:'提示词模板是「配置化」的第一步，让运营同学也能安全调整话术。'},
+{id:'c101',cat:'prompt',term:'输出解析与自动修复',brief:'模型输出格式错误时的重试与修复策略。',points:['JSON 解析失败→附上错误信息自动重试','多次失败→规则兜底或转人工','修复提示中给出明确的格式示例'],pm:'解析失败率是稳定性指标，宁可重试也不要把原始报错暴露给用户。'},
+{id:'c102',cat:'prompt',term:'多轮对话的上下文管理',brief:'长对话中控制上下文：保留关键信息、压缩历史、控制长度。',points:['常用策略：滑动窗口、摘要压缩、结构化记忆','轮数越多成本越高、越容易跑偏','提供「重新开始 / 清除上下文」入口'],pm:'长对话产品要专门设计上下文管理策略，避免成本失控与效果衰减。'},
+{id:'c103',cat:'prompt',term:'提示词评测与迭代',brief:'用评测集持续衡量提示词效果，替代「感觉变好了」。',points:['建立「输入—期望输出」样例集','每次改动跑回归对比','看版本胜率而非单一案例'],pm:'提示词迭代要有版本记录与回滚机制，这是 AI 产品工程化成熟度的试金石。'},
+
+{id:'c104',cat:'rag',term:'引用溯源（Citation）',brief:'RAG 答案附带原文出处，让用户可核查、可信任。',points:['检索时保留 chunk 元数据（文档、页码）','生成时要求模型标注来源','无依据时明确「未找到」而非硬答'],pm:'引用溯源是建立信任最直接的手段，尤其医疗、法律等专业领域。'},
+{id:'c105',cat:'rag',term:'知识更新与索引刷新',brief:'知识库内容变化后如何同步到检索系统。',points:['增量索引、定时重建、删除策略','文档改版保留历史版本','更新延迟需明确告知用户'],pm:'知识时效性是 RAG 体验的一部分，要定义「文档更新后多久可见」的 SLA。'},
+{id:'c106',cat:'rag',term:'查询改写与多路召回',brief:'对用户问题改写、扩展，提升检索召回率。',points:['典型方法：多查询（Multi-Query）、HyDE、同义扩展','多路召回后用重排收敛','改写不能偏离用户原意'],pm:'「换个问法就找不到」是常见差评点，查询改写是低成本提升命中率的手段。'},
+{id:'c107',cat:'rag',term:'检索失败与兜底策略',brief:'检索无结果或相关度低时的降级路径。',points:['低相关度阈值→坦诚说「没找到」','提供推荐问题、人工咨询入口','记录无结果查询反哺知识库建设'],pm:'「答不出」要设计得比「答错」体面：明确、可行动、可反馈。'},
+{id:'c108',cat:'rag',term:'RAG 的权限与数据隔离',brief:'知识检索必须遵循数据访问权限，防止越权泄露。',points:['按用户 / 角色过滤可检索文档','检索结果脱敏处理','访问审计日志可追溯'],pm:'企业知识问答必须先有权限体系，越权暴露是最严重的信任事故之一。'},
+
+{id:'c109',cat:'agent',term:'Agent 状态管理与断点续跑',brief:'多步任务的中间状态保存、恢复与中断处理。',points:['状态持久化到存储，进程重启可恢复','支持暂停 / 继续 / 回退','超时与失败可重试'],pm:'长任务要给用户「可暂停、可重试、可看进度」的控制感，而不是黑盒等待。'},
+{id:'c110',cat:'agent',term:'工具定义质量',brief:'工具的名称、描述、参数说明直接影响模型调用准确率。',points:['描述清晰、参数命名语义化','限定参数取值与必填项','提供错误示例帮助模型理解'],pm:'工具集就是产品能力面，工具定义要像接口文档一样认真评审。'},
+{id:'c111',cat:'agent',term:'自我纠错与重试机制',brief:'Agent 执行中检测到错误后重新规划、换路径重试。',points:['工具调用失败→读取错误→调整参数重试','同一错误重试 N 次后转人工','保留重试与失败轨迹供排查'],pm:'用户不应看到原始报错，而应看到「它尝试了其他方式」，失败路径也要精心设计。'},
+{id:'c112',cat:'agent',term:'长时任务与异步执行',brief:'耗时很长的 Agent 任务如何优雅地跑完并通知用户。',points:['后台执行 + 轮询 / 推送进度','用户可离开页面，完成时通知','支持任务取消与重跑'],pm:'长任务体验三要素：明确的进度、可离开、可感知完成。'},
+{id:'c113',cat:'agent',term:'Agent 安全与权限隔离',brief:'Agent 调用工具时的权限控制与攻击面管理。',points:['工具调用遵循最小权限原则','敏感操作须用户授权后执行','防范提示注入（参数夹带指令），操作审计可追溯'],pm:'Agent 能力越强，越要把「授权—执行—审计」设计进产品流程。'},
+
+{id:'c114',cat:'train',term:'训练数据清洗与配比',brief:'训练前的数据治理：去重、去脏、平衡配比。',points:['重复与噪声数据会放大错误','领域数据与通用数据需配比（防遗忘）','数据合规（授权、脱敏）先行'],pm:'数据质量决定模型质量上限，训练前必须先设计数据验收标准。'},
+{id:'c115',cat:'train',term:'指令数据构建',brief:'为监督微调准备的高质量「问题—回答」对。',points:['来源：人工标注、真实用户数据、大模型生成','难度分层：简单 / 中等 / 难','多轮对话数据更贴近真实使用'],pm:'指令数据是最稀缺的资产，建议建立持续采集与标注的运营机制。'},
+{id:'c116',cat:'train',term:'训练成本估算',brief:'大模型训练与微调的资源消耗量化。',points:['受参数量、数据量、训练时长影响','LoRA 等高效微调可大幅降本','云 GPU 按小时计费，需预留试错预算'],pm:'做预算与排期先算训练成本，微调一次的成本往往高于大批量 API 调用。'},
+{id:'c117',cat:'train',term:'训练过程评估',brief:'训练中持续监控效果，避免训练失败与过拟合。',points:['用验证集损失与评测集分数监控','异常检测：loss 不降、过拟合','保存最佳 checkpoint 备选'],pm:'训练不是「提交后等待」，要提前约定评估节奏与停止条件。'},
+{id:'c118',cat:'train',term:'混合专家模型（MoE）',brief:'一次推理只激活部分专家网络，兼顾能力与效率。',points:['稀疏激活：按输入路由到少数专家','参数量大但单次推理成本可控','已是主流大模型架构'],pm:'理解 MoE 就能理解「为什么参数上千亿还很便宜」，选型别只看参数量。'},
+
+{id:'c119',cat:'eval',term:'经典指标：准确率 / 召回 / F1',brief:'分类与检索任务的核心评测指标。',points:['准确率：预测正确的比例','召回率：相关中找出来的比例','F1 平衡两者的综合指标'],pm:'「准确率 95%」没有意义，先问清楚口径、正类定义与数据集构成。'},
+{id:'c120',cat:'eval',term:'标注规范与质量控制',brief:'人工评测的数据标注流程管理。',points:['编写标注指南与示例','多人标注交叉校验（一致性）','持续抽检与返工机制'],pm:'标注质量直接决定评测可信度，要当作产品需求一样去设计规范。'},
+{id:'c121',cat:'eval',term:'Badcase 分析',brief:'线上错误案例的收集、归因与闭环。',points:['来源：用户反馈、评测漏网、监控告警','归因到提示词 / 检索 / 模型 / 方案','修复后回填评测集防止复发'],pm:'Badcase 是产品迭代的金矿，建议建立周度复盘机制。'},
+{id:'c122',cat:'eval',term:'样本量与统计显著性',brief:'评测与实验需要注意的统计基础。',points:['样本太少的结论不可靠','关注置信区间与显著性（p 值）','AI 输出有随机性，多次采样取均值'],pm:'被「提升了 5%」打动前，先问样本量多少、置信区间多宽。'},
+{id:'c123',cat:'eval',term:'横向模型选型评测',brief:'用同一套评测集比较多个模型，辅助选型决策。',points:['统一提示词与参数，保证公平','覆盖效果、成本、延迟、合规多维度','关注长尾与边界表现'],pm:'换模型前先跑横向评测，用数据替代感觉做决策。'},
+
+{id:'c124',cat:'backend',term:'异步任务与状态机',brief:'重操作异步化，用状态机管理任务生命周期。',points:['典型状态：待处理→执行中→成功 / 失败 / 重试','客户端轮询或推送进度','幂等与并发控制'],pm:'产品上要给用户可感知的任务状态与失败重试入口。'},
+{id:'c125',cat:'backend',term:'客户端重试与退避',brief:'网络异常时的自动重试策略。',points:['指数退避加随机抖动，避免雪崩','区分可重试错误（超时）与不可重试（参数错）','设置最大重试次数与提示'],pm:'弱网场景（地铁、电梯）重试策略决定成败，别让用户反复手动点重试。'},
+{id:'c126',cat:'backend',term:'结构化日志',brief:'统一格式的日志输出，便于检索与排查。',points:['字段化：时间、链路、用户、业务码','敏感信息脱敏','日志级别与采样控制成本'],pm:'「出问题怎么排查」是上线前就要对齐的事，日志规范是基本盘。'},
+{id:'c127',cat:'backend',term:'配置管理与环境隔离',brief:'dev / staging / prod 环境配置分离与安全管控。',points:['配置与代码分离（环境变量、配置中心）','敏感配置加密与权限管控','灰度配置可不停机生效'],pm:'灰度与 A/B 的配置管理要产品参与：谁可见、何时生效都要有约定。'},
+{id:'c128',cat:'backend',term:'超时与错误码体系',brief:'接口的超时控制与统一错误返回。',points:['合理超时：连接 / 读 / 写分离','错误码语义化：业务码 + 状态码','错误信息不泄露内部细节'],pm:'错误码表就是产品异常体验的说明书，设计时想清楚每类错误用户该看到什么。'},
+
+{id:'c129',cat:'frontend',term:'前端状态管理',brief:'管理页面间共享数据与交互状态。',points:['常见方案：Pinia / Redux / Composable','单向数据流，状态可预测','持久化与多页同步策略'],pm:'状态管理影响多页面交互一致性，要提前问清「返回页面数据是否保留」。'},
+{id:'c130',cat:'frontend',term:'表单与校验体验',brief:'表单的即时校验、错误提示与提交反馈。',points:['即时校验减少提交失败','错误提示明确具体','提交中防重复提交（loading）','长表单分步引导'],pm:'表单是用户与产品接触最密集的地方，校验体验差会直接劝退。'},
+{id:'c131',cat:'frontend',term:'动画与微交互',brief:'交互动效对产品体验的加成作用。',points:['动效服务功能：反馈、引导、状态，而非装饰','时长适中（150—300ms）','尊重系统设置（prefers-reduced-motion）'],pm:'微交互让产品「有温度」，但动画应以增强理解为目标，避免炫技。'},
+{id:'c132',cat:'frontend',term:'前端工程化',brief:'构建工具、模块化与代码组织的工程实践。',points:['常见：Vite / Webpack、ESM、按需编译','产物优化：分包、压缩、Tree-shaking','构建产物与线上版本一一对应'],pm:'理解工程化能看懂排期里的「构建时间」，优化构建体验本身也是提效。'},
+{id:'c133',cat:'frontend',term:'列表与分页加载',brief:'长列表的加载性能与浏览体验。',points:['分页 / 加载更多 / 虚拟滚动','首屏只加载必要数据','空态、错误态、加载态三态齐全'],pm:'无限列表别让用户「迷失」，提供定位与返回顶部等辅助手段。'},
+
+{id:'c134',cat:'arch',term:'架构设计思维',brief:'从需求到架构的基本设计方法。',points:['先想清边界与可能的变化点','画数据流与调用关系','性能、可用、扩展性平衡','预留演进路径'],pm:'PM 不需要会画架构图，但要能看懂并追问关键决策背后的理由。'},
+{id:'c135',cat:'arch',term:'多级缓存',brief:'本地缓存 + 分布式缓存 + CDN 的组合策略。',points:['各级缓存的时效与一致性','热点数据尽量上移（本地缓存）','失效策略：TTL / 主动更新'],pm:'「慢」的优化通常从缓存入手，只要明确数据时效性要求就能定方案。'},
+{id:'c136',cat:'arch',term:'服务通信方式选型',brief:'RPC / HTTP / MQ 等内部通信方式的取舍。',points:['RPC 内部高性能、HTTP 通用好调、MQ 异步解耦','通信协议与数据格式的一致性','性能与可维护性平衡'],pm:'与研发对齐「内部接口用什么风格」，多数情况是协议选择而非技术优劣。'},
+{id:'c137',cat:'arch',term:'容量规划与压测',brief:'提前预估流量并验证系统承载能力。',points:['峰值流量预估（大促、活动）','压测定位瓶颈','预案：扩容、限流、降级'],pm:'活动类需求必须有容量评估环节，别等线上崩了再救火。'},
+{id:'c138',cat:'arch',term:'技术债务与演进',brief:'识别并管理为了追求速度而欠下的技术债。',points:['快与好的权衡是常态','技术债要显性化：登记、排期','定期重构窗口优于无限叠加'],pm:'技术债会拖慢交付速度，排期时记得留出还债时间，这是长期主义。'},
+
+{id:'c139',cat:'pm',term:'用户反馈闭环',brief:'收集、分类、跟进用户反馈的机制。',points:['渠道统一：反馈入口、群、客服','分类打标：缺陷 / 建议 / 赞美','重要反馈回访确认','反馈进需求池评估'],pm:'反馈不是看了就行，要形成「收集—跟进—反馈结果」的完整闭环。'},
+{id:'c140',cat:'pm',term:'竞品分析',brief:'系统研究竞品，为产品决策提供参照。',points:['维度：功能、体验、定价、生态、口碑','持续跟踪而非一次完成','服务于定位，而不是模仿'],pm:'做好竞品分析要始终回答：我们的差异化与护城河在哪里。'},
+{id:'c141',cat:'pm',term:'需求优先级排序',brief:'在有限资源下决定先做什么。',points:['常用方法：Kano 模型、RICE、价值 / 成本矩阵','结合战略方向与投入产出','透明排序，杜绝「谁嗓门大听谁的」'],pm:'排序做得好团队就少内耗；要能公开说出排序的理由。'},
+{id:'c142',cat:'pm',term:'数据指标体系',brief:'用指标度量产品健康度。',points:['北极星指标 + 过程指标','拆解到可执行的环节','警惕虚荣指标','定期复盘指标变化'],pm:'指标定义清楚团队才有共同语言，AI 产品还要叠加模型质量维度。'},
+{id:'c143',cat:'pm',term:'版本节奏与复盘',brief:'产品迭代节奏与发布后复盘。',points:['固定节奏发布（周 / 双周）','发布后复盘：目标 vs 实际','沉淀经验到流程与文档'],pm:'复盘不是追责，而是把「运气」变成「能力」。'},
+
+{id:'c144',cat:'safe',term:'国内数据合规法规',brief:'与业务相关的核心法规框架。',points:['《个保法》《数安法》《网安法》','处理个人信息需告知与授权','违规需评估合规成本'],pm:'上线前做一次合规自查（数据流、授权、保存期限），别把问号带到线上。'},
+{id:'c145',cat:'safe',term:'内容安全审核',brief:'生成内容的合规审核机制。',points:['审核维度：违规、敏感、广告、违禁','生成前（输入）与生成后（输出）双段审核','人审与机审结合'],pm:'面向公众的内容须通过审核才可发布，审核链路要设计进主流程而非事后加塞。'},
+{id:'c146',cat:'safe',term:'生成式 AI 与算法备案',brief:'国内对生成式 AI 服务的管理要求。',points:['《生成式人工智能服务管理暂行办法》','大模型服务上线需备案 / 登记','生成内容标识（水印、声明）要求'],pm:'合规是 AI 产品的「入场券」，上线计划里要单列合规时间线。'},
+{id:'c147',cat:'safe',term:'数据脱敏与加密',brief:'保护敏感数据的技术手段。',points:['常见：掩码、哈希、假名化、加密存储','脱敏规则按场景分级（开发 / 测试 / 生产）','密钥管理与定期轮换'],pm:'数据出域、进模型前都要过脱敏，隐私设计要前置到 PRD 阶段。'},
+{id:'c148',cat:'safe',term:'大模型安全测试',brief:'针对 AI 系统的专项安全评估。',points:['常见：红队测试（越狱、对抗样本）、提示注入、数据泄露','作为发布门禁','测试结果闭环修复'],pm:'模型上线前安排一次专项安全测试，成本远低于出事后补救。'},
+
+{id:'c149',cat:'coding',term:'编程基础思维',brief:'变量、函数、条件与循环构成的程序骨架，是理解代码的起点。',points:['变量存数据，函数封装逻辑，流程控制决定走向','读代码先找入口，再跟主线程，不用背全部','现象：同样的逻辑有多种写法，看可读性与效率'],pm:'AI 产品经理不必写代码，但要能读懂代码逻辑，与研发对话有共同语言。'},
+{id:'c150',cat:'coding',term:'数据结构与算法基础',brief:'数组、哈希表、树等结构及时间/空间复杂度概念。',points:['复杂度（Big O）衡量算法随数据量增长的代价','哈希表 O(1) 查改、数组连续内存、树适合层级','选错结构会导致大数据下性能崩坏'],pm:'理解复杂度就理解了「为什么数据量上来就慢」，评估技术方案时能看懂利弊。'},
+{id:'c151',cat:'coding',term:'正则表达式与文本处理',brief:'用规则模式对文本进行匹配、提取、替换的实用技能。',points:['核心：字符类、量词、分组、捕获','常用于数据清洗、日志解析、格式校验','写完后用用例验证，注意贪婪匹配坑'],pm:'处理埋点数据、用户反馈、评测集时几乎是必备技能，能大幅提效。'},
+{id:'c152',cat:'coding',term:'Git 与版本协作',brief:'代码版本管理工具：提交、分支、合并、回滚。',points:['一次提交只做一件事，信息写清楚','分支管理：功能分支 / 发布分支 / 修复分支','合并冲突时要看双方意图，别覆盖他人工作'],pm:'理解 Git 流程就理解研发排期与发布节奏，跨团队协作时能准确表达需求边界。'},
+{id:'c153',cat:'coding',term:'调试与问题排查',brief:'断点、日志、二分定位等系统化找 Bug 的方法。',points:['先复现，再定位，再修复，最后回归','二分法：缩小排查范围比逐行看快','日志是「黑盒」最便宜的探针'],pm:'「按我的操作又崩了」是无效反馈，只要能复现问题就和研发是同盟军。'},
+{id:'c154',cat:'coding',term:'自动化脚本与效率工具',brief:'用 Shell / Python 等脚本把重复操作自动化。',points:['适用：批量改名、数据搬运、报表生成、定时任务','「手动做两遍」就该考虑写脚本了','脚本也要有版本管理与异常处理'],pm:'善用脚本能让重复性工作「一次做对」，把时间留给真正的决策与思考。'},
+{id:'c155',cat:'coding',term:'代码质量与可维护性',brief:'命名、注释、结构、重构组成的工程素养。',points:['命名自解释优于堆注释','职责单一：一个函数只做一件事','重构是在不改变行为下的结构优化'],pm:'好代码是写给下一个人看的，技术评审时关注「三个月后还看得懂吗」。'},
+{id:'c156',cat:'coding',term:'软件测试分层',brief:'单元测试、集成测试、端到端测试的质量防线。',points:['单测测函数逻辑，集成测模块协作，E2E 测用户流程','越靠下越便宜、越快、越可靠','AI 输出要加「断言 + 评测」而非只看跑通'],pm:'上线前问一句「测试覆盖率多少、E2E 覆盖核心流程吗」，是对质量负责。'},
+{id:'c157',cat:'coding',term:'AI 辅助编程',brief:'Copilot 类工具与 AI 代码生成、审查、重构的工程实践。',points:['典型：代码补全、自然语言生成代码、AI 评审、自动修 Bug','AI 生成代码必须人工 review 与测试，勿盲信','提示词描述越具体，生成质量越高'],pm:'AI 编程工具已改变研发效率曲线，评估工程化程度时把「AI 使用率」作为一个观察项。'},
+{id:'c158',cat:'coding',term:'提示词生成代码（Code Prompt）',brief:'用自然语言向大模型描述需求生成代码的最佳实践。',points:['结构：角色 + 输入输出定义 + 示例 + 约束','要求分步生成并解释，便于理解与修正','复杂逻辑拆小步迭代，别一上来要整个系统'],pm:'「会提问」就是新的编程能力：产品经理用 Code Prompt 写原型、跑数据、做分析完全可行。'},
+
+{id:'c159',cat:'interview',term:'API 配额指标：RPM / TPM / QPS',brief:'模型服务商按「每分钟请求数」「每分钟 Token 数」等维度做限流与计费，是接 API 必懂的概念。',points:['RPM：每分钟请求数（Requests Per Minute）','TPM：每分钟 Token 数（Tokens Per Minute），体现真实消耗','QPS / TPS：每秒查询 / 事务数；通用服务还有 RPD、TPD 日配额','超限会返回限流错误，需重试退避与排队'],pm:'面试常考「如何估算一次活动需多少配额」：用「请求数 × 平均上下文 token」反推 TPM，再留 3 倍余量。'},
+{id:'c160',cat:'interview',term:'API 调用三件套：并发 / 流式 / 重试',brief:'大模型接口联调绕不开的三个工程问题：并发上限、流式输出、失败重试。',points:['并发：受配额与机房资源限制，超发会排队或报错','流式：SSE 逐字返回，首字时延比总时长重要','重试：指数退避 + 抖动，区分可重试与不可重试错误'],pm:'提问「产品峰值并发多少」是评估容量与成本的口径，也是面试场景题常见坑。'},
+{id:'c161',cat:'interview',term:'必答题：介绍一个你做的 AI 项目',brief:'用「背景—方案—量化结果—反思」四段式回答，避免流水账。',points:['背景：解决谁的什么问题，为什么非 AI 不可','方案：模型 / RAG / Agent 怎么选，讲清取舍','结果：用数据说话（效果、效率、成本）','反思：踩过什么坑、假设哪里错了'],pm:'面试官真正想听的是「你的判断力」，主动讲方案权衡与失败教训最加分。'},
+{id:'c162',cat:'interview',term:'高频技术题：RAG / 微调 / Agent 怎么选',brief:'三个关键词式技术概念，本质是「解决什么问题用哪条路」。',points:['RAG：知识实时更新、要溯源 → 挂知识库','微调：风格、领域、格式稳定 → 训练模型','Agent：要执行多步任务、调用工具 → 编排智能体','原则：先提示词，再 RAG，最后微调，能简单不复杂'],pm:'答法展示的不是技术深度，而是「按成本递增顺序做决策」的产品思维。'},
+{id:'c163',cat:'interview',term:'高频指标题：如何衡量 AI 产品效果',brief:'从效果、业务、体验三个层面构建 AI 产品评估体系。',points:['效果层：准确率、采纳率、评价分（质量）','业务层：转化、留存、成本、ROI（价值）','体验层：首字时延、失败率、重试率（体验）','加一层：评测集回归 + 线上监控（稳定性）'],pm:'标准答法：先说「单一指标会以偏概全」，再分层给指标，体现系统性。'},
+{id:'c164',cat:'interview',term:'场景题：设计一个 AI 客服',brief:'经典产品设计题，考察从需求到落地的完整链路。',points:['先拆场景：意图分类 → 知识检索 → 生成回答 → 转人工','再定边界：哪些高优、哪些不接（投诉/医疗建议）','然后定指标：解决率、转人工率、满意度、成本','最后想兜底：模型挂了的降级方案'],pm:'面试官考察的是「先想清楚再动手」：边界、评估、兜底三件套说全了基本就稳了。'},
+{id:'c165',cat:'interview',term:'挑战题：模型幻觉怎么办',brief:'面试必问的风险题，答「多管齐下」而非单点方案。',points:['入口：提示词约束「不确定就说不知道」','过程：RAG 提供依据 + 引用溯源','出口：低置信度转人工 / 模板兜底','机制：badcase 监控 + 持续评测'],pm:'加分项：承认「无法 100% 消除幻觉」，重点讲「如何把代价控制在可接受范围」。'},
+{id:'c166',cat:'interview',term:'行为面试：STAR 法则',brief:'用情境、任务、行动、结果四要素结构化讲个人经历。',points:['S 情境：背景与困难要交代清楚','T 任务：你被授权的目标与职责','A 行动：你做了什么，突出个人贡献（用「我」）','R 结果：量化结果 + 复盘反思'],pm:'面试官追问「你的角色是什么」就是在验证行动是否真实，准备时先想清个人贡献。'},
+{id:'c167',cat:'interview',term:'费米估算与商业案例题',brief:'在信息不足时做合理假设、给出量级估计与商业判断。',points:['套路：拆解公式 → 合理假设 → 计算 → 检验量级','示例：市占率 = 目标用户 × 渗透率 / 总用户','强调量级与假设合理，而非精确数字','商业题：先说目标客户与付费意愿，再谈模式'],pm:'面试官看的是思考框架：先说明假设，再推导，最后用常识检验结果是否离谱。'},
+{id:'c168',cat:'interview',term:'压轴题：AI 产品经理与传统的区别',brief:'考察对岗位本质的理解：从功能交付到效果运营的转变。',points:['传统：需求明确、流程确定、功能验收','AI：效果不确定、需评测与迭代、边界在探索','新能力：提示词设计与评测、模型选型、风险与合规','新产出：把「效果稳定」当做产品目标本身'],pm:'好答案：AI 产品经理的价值从「提功能」变成「造效果」，要同时接住技术与用户预期。'}
+];
+
+/* ---------------- 状态管理 ---------------- */
+/* v11.1：注册制 + 本设备 30 天免登录——无匿名账号；登录/注册成功后记录时间戳，超期需重新登录 */
+var currentUser = null;
+var LOGIN_TS_KEY = 'aipm_login_ts_v1';      /* 本设备最近登录时间：{uid, ts} */
+var HAS_ACCOUNT_KEY = 'aipm_has_account_v1';/* 是否注册过账号（决定登录页默认 tab） */
+var LOGIN_TTL_MS = 30 * 24 * 3600 * 1000;   /* 30 天免登录 */
+function saveLoginTs(uid){
+  try{ localStorage.setItem(LOGIN_TS_KEY, JSON.stringify({ uid: uid, ts: Date.now() })); localStorage.setItem(HAS_ACCOUNT_KEY, '1'); }catch(e){}
+}
+function loadLoginTs(){
+  try{ var r = localStorage.getItem(LOGIN_TS_KEY); return r ? JSON.parse(r) : null; }catch(e){ return null; }
+}
+function clearLoginTs(){
+  try{ localStorage.removeItem(LOGIN_TS_KEY); }catch(e){}
+}
+function loginRemainDays(){
+  var lt = loadLoginTs();
+  if(!lt || !lt.ts) return -1;
+  var d = LOGIN_TTL_MS - (Date.now() - lt.ts);
+  return d > 0 ? Math.ceil(d / 86400000) : 0;
+}
+var DEFAULT_STATE = {cards:{}, days:{}, history:{}, streak:{cur:0,best:0,last:null}, cfg:{newLimit:3, reviewLimit:5}};
+var state;
+
+/* v10.24：本机进度键统一按账号稳定生成（对象用户取真实 id，避免拼成 [object Object]；
+   字符串用户（本地账号/guest）原样使用，保证各形态下键一致可恢复） */
+function curKey(){
+  var u = currentUser;
+  var id = (typeof u === 'string') ? u : userKey(u);
+  return 'aipm_checkin_v2' + (id ? '_' + id : '');
+}
+/* 历史遗留键：旧版本对象用户会拼成 [object Object]；本地无账号/guest 各有独立键。
+   加载时新键无数据则依次回退迁移，保证升级不丢进度 */
+var CUR_LEGACY_KEYS = ['aipm_checkin_v2_[object Object]', 'aipm_checkin_v2_guest', 'aipm_checkin_v2'];
+function load(){
+  try{
+    var k = curKey();
+    var raw = localStorage.getItem(k);
+    if(!raw){
+      for(var i=0;i<CUR_LEGACY_KEYS.length;i++){
+        var lk = CUR_LEGACY_KEYS[i];
+        if(lk === k) continue;
+        var lraw = localStorage.getItem(lk);
+        if(lraw){
+          localStorage.setItem(k, lraw);   /* 迁移到当前账号键 */
+          localStorage.removeItem(lk);
+          raw = lraw;
+          break;
+        }
+      }
+    }
+    if(raw){ var s = JSON.parse(raw); for(var dk in DEFAULT_STATE){ if(s[dk]===undefined) s[dk]=DEFAULT_STATE[dk]; } return s; }
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+function save(){
+  try{ localStorage.setItem(curKey(), JSON.stringify(state)); }catch(e){}
+  if(cloudMode) scheduleCloudUpload();
+}
+state = load();
+
+/* ---------------- 用户扩展卡（AI 生成 / 内容更新） ---------------- */
+var USER_CARDS_KEY = 'aipm_user_cards_v1';
+var AI_CFG_KEY = 'aipm_ai_cfg';
+var AI_PRESETS = [
+  {name:'智谱 GLM（推荐，开放平台注册即用）', base:'https://open.bigmodel.cn/api/paas/v4/chat/completions', model:'glm-4-flash'},
+  {name:'DeepSeek', base:'https://api.deepseek.com/chat/completions', model:'deepseek-chat'},
+  {name:'腾讯混元', base:'https://api.hunyuan.cloud.tencent.com/v1/chat/completions', model:'hunyuan-turbo'}
+];
+/* v11.0：AI 生成卡 / AI 接口配置存本机（含 API Key 属隐私数据，不上云），按键含账号 id 隔离 */
+function userCardsKey(){ return USER_CARDS_KEY + (currentUser ? '_' + (userKey(currentUser) || 'anon') : ''); }
+var USER_CARDS = [];
+function loadUserCards(){
+  try{ var r = localStorage.getItem(userCardsKey()); USER_CARDS = r ? JSON.parse(r) : []; }
+  catch(e){ USER_CARDS = []; }
+  return USER_CARDS;
+}
+function saveUserCards(){
+  try{ localStorage.setItem(userCardsKey(), JSON.stringify(USER_CARDS)); }catch(e){}
+}
+function loadAiCfg(){
+  try{ var r = localStorage.getItem(AI_CFG_KEY); return r ? JSON.parse(r) : null; }catch(e){ return null; }
+}
+function saveAiCfg(c){
+  try{ localStorage.setItem(AI_CFG_KEY, JSON.stringify(c)); }catch(e){}
+}
+/* 全部卡片 = 内置卡 + 用户扩展卡 */
+function allCards(){ return CARDS.concat(USER_CARDS); }
+
+function dstr(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function today(){ return dstr(new Date()); }
+function addDays(str,n){ var d=new Date(str+'T00:00:00'); d.setDate(d.getDate()+n); return dstr(d); }
+var INTERVALS = [1,2,4,7,14]; // box -> 天数
+function cardById(id){
+  for(var i=0;i<CARDS.length;i++){ if(CARDS[i].id===id) return CARDS[i]; }
+  for(var j=0;j<USER_CARDS.length;j++){ if(USER_CARDS[j].id===id) return USER_CARDS[j]; }
+  return null;
+}
+
+function ensureDay(){
+  var t = today();
+  var cards = allCards();
+  if(!state.days[t]){
+    var due = [], news = [], myNews = [];
+    for(var i=0;i<cards.length;i++){
+      var c = cards[i], st = state.cards[c.id];
+      if(st && st.next <= t) due.push({id:c.id, next:st.next});
+      else if(!st){ if(c.src==='ai') myNews.push(c.id); else news.push(c.id); }
+    }
+    due.sort(function(a,b){ return a.next<b.next?-1:1; });
+    var queue = due.slice(0, state.cfg.reviewLimit).map(function(x){return x.id;});
+    /* 新知配额：自己的 AI 卡优先进入，其次内置新卡 */
+    queue = queue.concat(myNews.concat(news).slice(0, state.cfg.newLimit));
+    state.days[t] = {queue:queue, idx:0, grades:{}, done:false};
+    save();
+  }
+  return state.days[t];
+}
+
+function grade(id, good){
+  var t = today(), st = state.cards[id];
+  var prevBox = st ? st.box : -1;
+  if(good){
+    var nb = Math.min(prevBox+1, 4);
+    state.cards[id] = {box:nb, next:addDays(t, INTERVALS[nb]), seen:(st?st.seen||0:0)+1};
+  }else{
+    state.cards[id] = {box:0, next:addDays(t,1), seen:(st?st.seen||0:0)+1};
+  }
+  var day = state.days[t];
+  day.grades[id] = good;
+  day.idx++;
+  state.history[t] = (state.history[t]||0)+1;
+  if(day.idx >= day.queue.length){ day.done = true; completeDay(t); }
+  save();
+}
+
+function completeDay(t){
+  var s = state.streak;
+  if(s.last === t) return;
+  if(s.last === addDays(t,-1)) s.cur++;
+  else s.cur = 1;
+  s.last = t;
+  if(s.cur > s.best) s.best = s.cur;
+}
+
+function masteryCount(){ var n=0; for(var k in state.cards){ if(state.cards[k].box>=3) n++; } return n; }
+function learnedCount(){ var n=0; for(var k in state.cards){ if(state.cards[k].seen>0) n++; } return n; }
+
+/* ---------------- 渲染：今日打卡 ---------------- */
+var flipped = false;
+function renderToday(){
+  var el = document.getElementById('view-today');
+  var day = ensureDay();
+  var t = today();
+  var h = '';
+  if(day.queue.length === 0){
+    h += '<div class="done-card"><h2>全部学完啦！</h2><p>'+allCards().length+' 张知识卡都已进入复习队列，明天再来打卡复习吧。<br>也可以去「知识库」自由翻阅。</p><button class="btn btn-primary" data-act="tab" data-view="lib">去知识库逛逛</button></div>';
+    el.innerHTML = h; return;
+  }
+  if(day.done){
+    var good = 0, bad = 0;
+    for(var k in day.grades){ if(day.grades[k]) good++; else bad++; }
+    h += '<div class="done-card"><h2>今日打卡完成！</h2>';
+    h += '<p>今天学了 <b>'+day.idx+'</b> 张卡 · 记住 '+good+' 张 · 待巩固 '+bad+' 张<br>连续打卡 <b>'+state.streak.cur+'</b> 天，保持节奏，量变引起质变</p>';
+    h += '<button class="btn btn-primary" data-act="bonus">加餐 5 张</button>';
+    h += '<button class="btn btn-ghost" data-act="tab" data-view="stats">查看统计</button></div>';
+    el.innerHTML = h; return;
+  }
+  var idx = day.idx, total = day.queue.length;
+  var id = day.queue[idx], card = cardById(id);
+  var pct = Math.round(idx/total*100);
+  var r = 23, circ = 2*Math.PI*r, off = circ*(1-pct/100);
+  h += '<div class="progress-row">';
+  h += '<div class="ring"><svg width="52" height="52"><circle cx="26" cy="26" r="'+r+'" fill="none" stroke="#e8edf9" stroke-width="5"/><circle cx="26" cy="26" r="'+r+'" fill="none" stroke="url(#gr)" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+off+'"/><defs><linearGradient id="gr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2e5bff"/><stop offset="1" stop-color="#4e8cff"/></linearGradient></defs><text x="26" y="31" text-anchor="middle" class="num">'+(idx)+'</text></svg></div>';
+  h += '<div class="txt">第 '+(idx+1)+' / '+total+' 张<small>翻面自评：记住了进阶复习，没记住明天再见</small></div></div>';
+  var cat = CATS[card.cat];
+  h += '<div class="flip-area"><div class="flip3d'+(flipped?' flipped':'')+'" id="flipCard" data-act="flip">';
+  h += '<div class="face front"><span class="cat-badge" style="background:'+catBg(card.cat)+'">'+cat.name+'</span>';
+  h += '<div class="term">'+card.term+'</div>';
+  h += '<div style="font-size:12.5px;color:#8fa0c4;">回想一下：它是什么？和产品工作有什么关系？</div>';
+  h += '<div class="tap">点击卡片翻面查看答案（快捷键：空格）</div></div>';
+  h += '<div class="face back"><span class="cat-badge" style="background:'+catBg(card.cat)+'">'+cat.name+'</span>';
+  h += '<div class="brief">'+card.brief+'</div><ul>';
+  for(var p=0;p<card.points.length;p++) h += '<li>'+card.points[p]+'</li>';
+  h += '</ul><div class="pm-note"><b>PM 视角：</b>'+card.pm+'</div></div></div></div>';
+  h += '<div class="grades"><button class="g-bad" data-act="bad">没记住</button><button class="g-good" data-act="good">记住了</button></div>';
+  h += '<div class="kbd-tip">快捷键：空格 = 翻面 · 1 = 没记住 · 2 = 记住了</div>';
+  el.innerHTML = h;
+}
+function catBg(cat){
+  var map = {llm:'#e0e7ff',prompt:'#fce7f3',rag:'#d1fae5',agent:'#fef3c7',train:'#ffe4e6',eval:'#e0f2fe',backend:'#dbeafe',frontend:'#ede9fe',arch:'#d1fae5',pm:'#e0f2fe',safe:'#f1f5f9',coding:'#ccfbf1',interview:'#fce7f3'};
+  return map[cat]||'#eef2ff';
+}
+function flip(){ flipped = !flipped; renderToday(); }
+function doGrade(good){
+  if(!flipped){ flip(); return; }
+  var day = state.days[today()];
+  grade(day.queue[day.idx], good);
+  flipped = false;
+  renderAll();
+}
+function bonus(){
+  var t = today(), day = state.days[t];
+  var cards = allCards();
+  var inQueue = {}; for(var i=0;i<day.queue.length;i++) inQueue[day.queue[i]]=1;
+  var pool = [], myNew = [], newCards = [], seen = [];
+  for(var j=0;j<cards.length;j++){
+    var c = cards[j], st = state.cards[c.id];
+    if(inQueue[c.id]) continue;
+    if(st && st.next<=t) pool.push(c.id);
+    else if(!st){ if(c.src==='ai') myNew.push(c.id); else newCards.push(c.id); }
+    else seen.push(c.id);
+  }
+  /* 自己的 AI 新卡优先进加餐，其余打散随机 */
+  function shuffle(a){ for(var x=a.length-1;x>0;x--){ var y=Math.floor(Math.random()*(x+1)), tmp=a[x]; a[x]=a[y]; a[y]=tmp; } return a; }
+  pool = pool.concat(myNew).concat(shuffle(newCards)).concat(shuffle(seen));
+  day.queue = day.queue.concat(pool.slice(0,5));
+  day.done = false; save(); flipped=false; renderAll();
+}
+
+/* ---------------- 渲染：知识库 ---------------- */
+var libCat = 'all', libKw = '';
+function renderLib(){
+  var el = document.getElementById('view-lib');
+  var cards = allCards();
+  var h = '<div class="lib-head"><input id="libSearch" placeholder="搜索术语、要点、PM 视角…" value="'+libKw.replace(/"/g,'&quot;')+'"></div>';
+  h += '<div class="chips"><button class="chip'+(libCat==='all'?' on':'')+'" data-act="lib-cat" data-cat="all">全部 '+cards.length+'</button>';
+  for(var k in CATS){
+    var n=0; for(var i=0;i<cards.length;i++){ if(cards[i].cat===k) n++; }
+    h += '<button class="chip'+(libCat===k?' on':'')+'" data-act="lib-cat" data-cat="'+k+'">'+CATS[k].name+' '+n+'</button>';
+  }
+  h += '</div><div id="libList"></div>';
+  el.innerHTML = h;
+  renderLibList();
+}
+function renderLibList(){
+  var el = document.getElementById('libList'); if(!el) return;
+  var cards = allCards();
+  var kw = libKw.trim().toLowerCase();
+  var h = '';
+  var shown = 0;
+  for(var i=0;i<cards.length;i++){
+    var c = cards[i];
+    if(libCat!=='all' && c.cat!==libCat) continue;
+    if(kw){
+      var blob = (c.term+c.brief+c.points.join('')+c.pm).toLowerCase();
+      if(blob.indexOf(kw)<0) continue;
+    }
+    shown++;
+    var st = state.cards[c.id];
+    var box = st?st.box:-1;
+    var badge = box<0?'<span class="badge b3">未学</span>':(box===0?'<span class="badge b0">需巩固</span>':(box>=3?'<span class="badge b2">已掌握</span>':'<span class="badge b1">学习中</span>'));
+    var mine = (c.src==='ai')?'<span class="badge" style="background:#e0e7ff;color:#4f46e5;">我的</span>':'';
+    var cat = CATS[c.cat] || {name:c.cat};
+    h += '<div class="lib-item" id="li-'+c.id+'"><div class="row" data-act="lib-toggle" data-id="'+c.id+'">';
+    h += '<span class="t">'+c.term+'</span><span class="c">'+cat.name+'</span>'+badge+mine+'</div>';
+    h += '<div class="lib-detail"><div class="brief" style="font-size:13.5px;line-height:1.7;color:#374a6b;font-weight:600;margin-bottom:10px;">'+c.brief+'</div><ul style="list-style:none;margin-bottom:10px;">';
+    for(var p=0;p<c.points.length;p++) h += '<li style="font-size:13px;line-height:1.7;color:#4b5c7e;padding-left:18px;position:relative;margin-bottom:5px;"><span style="position:absolute;left:2px;top:8px;width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,#2e5bff,#4e8cff);display:inline-block;"></span>'+c.points[p]+'</li>';
+    h += '</ul><div class="pm-note"><b>PM 视角：</b>'+c.pm+'</div></div></div>';
+  }
+  if(shown===0) h = '<div style="text-align:center;color:#8fa0c4;padding:40px 0;font-size:14px;">没有找到匹配的知识卡，换个关键词试试～</div>';
+  el.innerHTML = h;
+  /* 重播淡入动画：切换分类 / 搜索时给列表一个流畅的入场动效 */
+  el.style.animation='none'; void el.offsetWidth; el.style.animation='';
+}
+function toggleLib(id){ var el=document.getElementById('li-'+id); if(el) el.classList.toggle('open'); }
+
+/* ---------------- 渲染：统计 ---------------- */
+function renderStats(){
+  var el = document.getElementById('view-stats');
+  var cards = allCards();
+  var total = cards.length, learned = learnedCount(), mastered = masteryCount();
+  var h = '<div class="stat-tiles">';
+  h += '<div class="tile"><div class="v">'+state.streak.cur+'</div><div class="k">连续打卡</div></div>';
+  h += '<div class="tile"><div class="v">'+state.streak.best+'</div><div class="k">最长连续</div></div>';
+  h += '<div class="tile"><div class="v">'+learned+'</div><div class="k">已学习</div></div>';
+  h += '<div class="tile"><div class="v">'+(total?Math.round(mastered/total*100):0)+'%</div><div class="k">掌握率</div></div></div>';
+  var t = new Date(); t.setHours(12,0,0,0);
+  var dow = (t.getDay()+6)%7;
+  var cells = [];
+  var start = new Date(t); start.setDate(t.getDate()-dow-16*7);
+  var todayS = today();
+  for(var w=0;w<17;w++){
+    for(var d=0;d<7;d++){
+      var dd = new Date(start); dd.setDate(start.getDate()+w*7+d);
+      var ds = dstr(dd);
+      var cnt = state.history[ds]||0;
+      var cls = 'hm-cell';
+      if(cnt>0) cls += ' hm'+Math.min(4, Math.ceil(cnt/3));
+      var future = ds>todayS;
+      if(future) cls += '" style="visibility:hidden';
+      cells.push('<div class="'+cls+'" title="'+ds+(cnt?(' · 学习 '+cnt+' 张'):'')+'"></div>');
+    }
+  }
+  h += '<div class="sec-title">最近 17 周打卡热力图</div><div class="heatmap">'+cells.join('')+'</div>';
+  h += '<div class="sec-title">分类掌握度</div>';
+  for(var k in CATS){
+    var tot=0, mas=0;
+    for(var i=0;i<cards.length;i++){ if(cards[i].cat===k){ tot++; var st2=state.cards[cards[i].id]; if(st2&&st2.box>=3) mas++; } }
+    var pct2 = tot? Math.round(mas/tot*100):0;
+    h += '<div class="cat-bar"><div class="lab"><span>'+CATS[k].name+'</span><span>'+mas+'/'+tot+'</span></div>';
+    h += '<div class="track"><div class="fill" style="width:'+pct2+'%"></div></div></div>';
+  }
+  h += '<div style="text-align:center;margin-top:24px;"><button class="btn btn-ghost" style="margin:0;color:#ef4444;border-color:#fecaca" data-act="reset">重置全部进度</button> <button class="btn btn-ghost" style="margin:0" data-act="export">导出进度</button></div>';
+  el.innerHTML = h;
+}
+function resetAll(){
+  if(confirm('确定要清空所有打卡记录和进度吗？此操作不可恢复。')){
+    state = JSON.parse(JSON.stringify(DEFAULT_STATE)); save(); renderAll();
+  }
+}
+function exportData(){
+  var blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'aipm-checkin-progress' + (currentUser ? '-' + currentUser : '') + '.json';
+  a.click();
+}
+
+/* ---------------- AI 智能扩卡 ---------------- */
+/* 通过 OpenAI 兼容接口（智谱 / DeepSeek / 腾讯混元等）把任意内容一键生成知识卡，加入学习流 */
+var AI_SYS_PROMPT = '你是一位资深的 AI 产品经理知识整理专家。请阅读用户提供的内容，提炼其中最核心的 1 个知识点，输出一张知识卡。' +
+  '必须只输出一个 JSON 对象（不要 markdown 代码块、不要任何解释文字），格式如下：' +
+  '{"term":"术语名称（简洁，如：RAG 检索增强生成）","cat":"分类代码","brief":"一句话精确定义（不超过 60 字）",' +
+  '"points":["要点1","要点2","要点3","要点4"],"pm":"从产品经理视角给一句应用建议（不超过 50 字）"}' +
+  '其中 cat 只能取：llm、prompt、rag、agent、train、eval、backend、frontend、arch、pm、safe、coding、interview 之一；' +
+  '若用户指定了分类则使用指定分类，否则从上述分类中选最贴切的一个。points 取 3~5 条，每条一句话，条理清晰、可直接记忆。';
+var aiDraft = null;
+
+function renderAi(){
+  var el = document.getElementById('view-ai');
+  var cfg = loadAiCfg();
+  var h = '';
+  /* ① 未配置提示（配置入口=右上角账户图标的设置弹窗） */
+  h += '<div class="ai-card">';
+  h += '<div class="ai-head"><div class="t">AI 智能扩卡<small>粘贴任意内容 → 生成一张知识卡 → 自动加入打卡学习流</small></div></div>';
+  if(!cfg){
+    h += '<div class="hint" style="margin-bottom:12px;">还<span style="font-weight:700;">没配置 AI 接口</span>：请点击右上角<b>账户图标</b>打开设置，粘贴 API Key（智谱 / DeepSeek / 腾讯混元等任选其一）。</div>';
+  }
+  /* ② 生成区 */
+  h += '<textarea id="aiText" class="ai-textarea" placeholder="粘贴要学习的知识内容：一篇文章、一份资料、一道面试题、一段课程笔记…&#10;例：今天学习了 MCP 协议，它是连接 AI 应用与外部工具的开放标准……"></textarea>';
+  h += '<div class="ai-ops">';
+  h += '<select id="aiCat"><option value="">自动分类</option>';
+  for(var k in CATS){ h += '<option value="'+k+'">'+CATS[k].name+'</option>'; }
+  h += '</select><button class="ai-gen-btn" data-act="ai-gen" id="aiGenBtn">生成知识卡</button></div>';
+  h += '<div class="ai-msg" id="aiMsg"></div>';
+  h += '</div>';
+  /* ③ 预览编辑区 */
+  h += '<div class="ai-preview" id="aiPreview">';
+  h += '<h3>生成结果预览（可修改后保存）</h3>';
+  h += '<label>术语名称</label><input id="pvTerm" placeholder="术语名称">';
+  h += '<div class="row" style="display:flex;gap:10px;flex-wrap:wrap;">';
+  h += '<div style="flex:1;min-width:150px;"><label>分类</label><select id="pvCat"></select></div></div>';
+  h += '<label>一句话定义</label><textarea id="pvBrief" rows="2"></textarea>';
+  h += '<label>要点（每行一条，3~5 条）</label><textarea id="pvPoints" rows="4"></textarea>';
+  h += '<label>PM 视角</label><textarea id="pvPm" rows="2"></textarea>';
+  h += '<div class="ai-pv-ops"><button class="save" data-act="ai-save">保存到我的卡片</button><button class="cancel" data-act="ai-cancel">放弃</button></div>';
+  h += '</div>';
+  /* ④ 我的卡片 */
+  h += '<div class="sec-title">我的卡片（'+USER_CARDS.length+'）</div><div id="aiList"></div>';
+  el.innerHTML = h;
+  renderAiList();
+  /* 预览分类下拉 */
+  var pv = document.getElementById('pvCat');
+  if(pv){ for(var k2 in CATS){ var o=document.createElement('option'); o.value=k2; o.textContent=CATS[k2].name; pv.appendChild(o); } }
+}
+function renderAiList(){
+  var el = document.getElementById('aiList'); if(!el) return;
+  if(USER_CARDS.length===0){ el.innerHTML = '<div style="text-align:center;color:#8fa0c4;padding:20px 0;font-size:13px;">还没有自己的卡片，用上面的 AI 生成一张吧～</div>'; return; }
+  var h = '';
+  for(var i=0;i<USER_CARDS.length;i++){
+    var c = USER_CARDS[i];
+    var cat = CATS[c.cat] || {name:c.cat||'未分类'};
+    h += '<div class="ai-list-item"><span class="t" title="'+c.term.replace(/"/g,'&quot;')+'">'+c.term+'</span><span class="c">'+cat.name+'</span><button class="del" data-act="ai-del" data-id="'+c.id+'" title="删除">✕</button></div>';
+  }
+  el.innerHTML = h;
+}
+function aiMsg(t, ok){
+  var el = document.getElementById('aiMsg');
+  if(!el) return;
+  el.textContent = t || '';
+  el.className = 'ai-msg' + (ok===false ? ' err' : '');
+}
+function setMsg(t, ok){
+  var el = document.getElementById('setAiMsg');
+  if(!el) return;
+  el.textContent = t || '';
+  el.className = 'set-msg' + (ok===false ? ' err' : '');
+}
+function aiCfgPreset(i){
+  var pr = AI_PRESETS[i]; if(!pr) return;
+  var b = document.getElementById('aiCfgBase'), k = document.getElementById('aiCfgKey'), m = document.getElementById('aiCfgModel');
+  if(b){ b.value = pr.base; } if(m){ m.value = pr.model; }
+  if(k){ k.focus(); k.placeholder = '粘贴你的 ' + (pr.name.split('（')[0]) + ' API Key'; }
+  setMsg('已填入 '+pr.name.split('（')[0]+' 的地址与模型名，请粘贴你的 API Key 后点「保存配置」');
+}
+function aiCfgSave(){
+  var b = document.getElementById('aiCfgBase'), k = document.getElementById('aiCfgKey'), m = document.getElementById('aiCfgModel');
+  var cfg = {base:(b?b.value:'').trim(), key:(k?k.value:'').trim(), model:(m?m.value:'').trim()};
+  if(!cfg.base || !cfg.model || !cfg.key){ setMsg('请完整填写接口地址、API Key、模型名', false); return; }
+  saveAiCfg(cfg);
+  try{ k.value = ''; }catch(e){}
+  setMsg('AI 配置已保存，可到「AI 扩卡」页生成知识卡');
+}
+function aiExtractJson(txt){
+  if(!txt) return null;
+  var t = txt.trim();
+  t = t.replace(/^```(?:json)?\s*/i,'').replace(/\s*```\s*$/,'');
+  try{ var o = JSON.parse(t); return o; }catch(e){}
+  var s = t.indexOf('{'), e = t.lastIndexOf('}');
+  if(s>=0 && e>s){ try{ return JSON.parse(t.slice(s, e+1)); }catch(e2){} }
+  var sa = t.indexOf('['), ea = t.lastIndexOf(']');
+  if(sa>=0 && ea>sa){ try{ var arr = JSON.parse(t.slice(sa, ea+1)); if(arr && arr.length) return arr[0]; }catch(e3){} }
+  return null;
+}
+function aiNormCard(o, catSel){
+  if(!o) return null;
+  var term = (o.term||o.title||'').toString().trim();
+  var brief = (o.brief||o.definition||o.desc||'').toString().trim();
+  var pm = (o.pm||o.pmView||o.insight||'').toString().trim();
+  var rawPts = o.points || o.bullets || o.keys || [];
+  if(typeof rawPts === 'string') rawPts = rawPts.split(/\n+/);
+  var points = [];
+  for(var i=0;i<rawPts.length;i++){
+    var p = (rawPts[i]||'').toString().replace(/^\s*(?:[-*•]\s*|\d+[.、)）]\s*)+/,'').trim();
+    if(p) points.push(p);
+  }
+  if(!term || !brief || points.length<1) return null;
+  var cat = (o.cat||'').toString().trim();
+  if(!CATS[cat]) cat = (catSel && CATS[catSel]) ? catSel : 'llm';
+  return {term:term.slice(0,60), cat:cat, brief:brief.slice(0,200), points:points.slice(0,6), pm:(pm||'').slice(0,200)};
+}
+function aiGen(){
+  var txtEl = document.getElementById('aiText');
+  var txt = txtEl ? txtEl.value.trim() : '';
+  if(!txt){ aiMsg('请先粘贴要学习的知识内容', false); return; }
+  var cfg = loadAiCfg();
+  if(!cfg || !cfg.base || !cfg.key || !cfg.model){
+    aiMsg('请先完成接口配置：到「设置」页选择服务商并粘贴 API Key', false);
+    return;
+  }
+  var btn = document.getElementById('aiGenBtn'), sel = document.getElementById('aiCat');
+  var catSel = sel ? sel.value : '';
+  if(btn){ btn.disabled = true; btn.textContent = '生成中…'; }
+  aiMsg('正在让 AI 提炼知识卡（约 10~30 秒）…');
+  var body = {model:cfg.model, temperature:0.4, messages:[
+    {role:'system', content:AI_SYS_PROMPT + (catSel ? ('\n用户指定分类为：'+catSel) : '')},
+    {role:'user', content:txt}
+  ]};
+  var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  if(ctrl) setTimeout(function(){ try{ ctrl.abort(); }catch(e){} }, 60000);
+  fetch(cfg.base, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+cfg.key},
+    body:JSON.stringify(body),
+    signal:ctrl ? ctrl.signal : undefined
+  }).then(function(res){
+    return res.text().then(function(txt2){ return {ok:res.ok, status:res.status, text:txt2}; });
+  }).then(function(r){
+    if(!r.ok){
+      var msg = '接口返回 '+r.status;
+      try{ var j = JSON.parse(r.text); if(j && (j.error&&j.error.message || j.message)) msg += '：' + (j.error&&j.error.message || j.message); }catch(e){}
+      aiMsg('生成失败：' + msg.slice(0,200) + '（请检查 API Key、模型名与接口地址）', false);
+      return;
+    }
+    var j;
+    try{ j = JSON.parse(r.text); }catch(e){ aiMsg('接口返回无法解析，请确认使用的是 OpenAI 兼容的 /chat/completions 接口', false); return; }
+    var content = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+    var obj = null;
+    try{ obj = aiExtractJson(content); }catch(e){}
+    var card = aiNormCard(obj, catSel);
+    if(!card){ aiMsg('AI 返回内容格式不符合要求，可点击重试或修改内容；也可尝试换一个模型', false); return; }
+    aiDraft = card;
+    var pv = document.getElementById('aiPreview');
+    if(pv) pv.classList.add('pv-open');
+    document.getElementById('pvTerm').value = card.term;
+    var pvCat = document.getElementById('pvCat'); if(pvCat) pvCat.value = card.cat;
+    document.getElementById('pvBrief').value = card.brief;
+    document.getElementById('pvPoints').value = card.points.join('\n');
+    document.getElementById('pvPm').value = card.pm;
+    aiMsg('生成成功！可修改下方内容后保存');
+  }).catch(function(err){
+    var m = (err && err.name === 'AbortError') ? '生成超时（60 秒），请重试或换一个更快的模型' : '网络请求失败：' + ((err && err.message) || '未知错误') + '。若为 CORS 跨域错误，请改用支持浏览器直连的接口，或换一个服务商';
+    aiMsg(m, false);
+  }).finally(function(){
+    if(btn){ btn.disabled = false; btn.textContent = '生成知识卡'; }
+  });
+}
+function aiSave(){
+  if(!aiDraft){ aiMsg('没有可保存的草稿', false); return; }
+  var term = document.getElementById('pvTerm').value.trim();
+  var brief = document.getElementById('pvBrief').value.trim();
+  var pm = document.getElementById('pvPm').value.trim();
+  var ptsRaw = document.getElementById('pvPoints').value.split('\n');
+  var points = [];
+  for(var i=0;i<ptsRaw.length;i++){ var p = ptsRaw[i].replace(/^[\s\-*•\d.、]+/,'').trim(); if(p) points.push(p); }
+  var pvCat = document.getElementById('pvCat');
+  if(!term){ aiMsg('术语名称不能为空', false); return; }
+  if(!brief){ aiMsg('一句话定义不能为空', false); return; }
+  if(points.length<1){ aiMsg('至少写一条要点', false); return; }
+  var card = {id:'u'+Date.now()+Math.floor(Math.random()*1000), cat:(pvCat?pvCat.value:'llm')||'llm',
+    term:term, brief:brief, points:points, pm:pm, src:'ai', created:Date.now()};
+  USER_CARDS.push(card);
+  saveUserCards();
+  aiDraft = null;
+  var pv = document.getElementById('aiPreview'); if(pv) pv.classList.remove('pv-open');
+  var ta = document.getElementById('aiText'); if(ta) ta.value = '';
+  renderAi();
+  aiMsg('已保存！新卡片已加入「知识库」与「我的卡片」，将从明日（或「加餐」）起进入学习队列');
+}
+function aiCancel(){
+  aiDraft = null;
+  var pv = document.getElementById('aiPreview'); if(pv) pv.classList.remove('pv-open');
+  aiMsg('');
+}
+function aiDel(id){
+  var target = null;
+  for(var i=0;i<USER_CARDS.length;i++){ if(USER_CARDS[i].id===id){ target = USER_CARDS[i]; break; } }
+  if(!target) return;
+  if(!confirm('删除「'+target.term+'」？对应的学习进度将一并清除。')) return;
+  USER_CARDS.splice(i,1);
+  saveUserCards();
+  /* 清理该卡的学习进度（若有） */
+  try{ delete state.cards[id]; save(); }catch(e){}
+  renderAi();
+  aiMsg('已删除「'+target.term+'」');
+}
+
+/* ---------------- 渲染：设置（v10.22 起为弹窗展示） ---------------- */
+function openSettings(){
+  var m = document.getElementById('settingsModal');
+  if(m) m.style.display = 'flex';
+  renderSettings();
+}
+function closeSettings(){
+  var m = document.getElementById('settingsModal');
+  if(m) m.style.display = 'none';
+}
+function renderSettings(){
+  var el = document.getElementById('settingsBody');
+  var cfg = loadAiCfg();
+  var h = '';
+  /* v11.0：进度诊断行（今日状态 / 云端账号 / 缓存键）——纯云端，无本机存储模式 */
+  var u0 = currentUser, t0 = today();
+  var todayDone = !!(state.days && state.days[t0] && state.days[t0].done);
+  var stLine = '进度：今日' + (todayDone ? '已打卡' : '未打卡') +
+    ' · 存储：云端' + (u0 ? '（' + userLabel(u0) + '）' : '（未登录）') +
+    ' · 免登录：' + (loginRemainDays() > 0 ? '本设备剩余 ' + loginRemainDays() + ' 天' : '已过期，请重新登录') +
+    ' · 用户数据：云端（users 集合）' +
+    ' · 缓存键：' + (curKey() || '无') +
+    (_needCreateCollection ? ' · ⚠ 云端集合未创建，进度/用户数据会保存失败' : '');
+  h += '<div class="set-sub" id="setStateLine" style="margin-bottom:14px;padding:9px 11px;background:#f6f9ff;border-radius:10px;"></div>';
+  setTimeout(function(){
+    var sl = document.getElementById('setStateLine');
+    if(sl) sl.textContent = stLine;
+  }, 0);
+  /* ① 学习量设置 */
+  h += '<div class="ai-card">';
+  h += '<div class="ai-head"><div class="t">每日学习量<small>控制每天复习与新知的数量，按账号保存</small></div></div>';
+  h += '<div class="set-cols">';
+  h += '<div><div class="set-lab">每日复习（张）</div><input id="setReview" class="set-num" type="number" min="0" max="99" value="'+state.cfg.reviewLimit+'"><div class="set-sub">从到期需要复习的卡中抽取</div></div>';
+  h += '<div><div class="set-lab">每日新知（张）</div><input id="setNew" class="set-num" type="number" min="0" max="99" value="'+state.cfg.newLimit+'"><div class="set-sub">从尚未学过的卡中抽取</div></div>';
+  h += '</div>';
+  h += '<div class="set-sub">当前打卡节奏：每天复习 '+state.cfg.reviewLimit+' 张 + 学习 '+state.cfg.newLimit+' 张。调成 0 可暂停对应部分；修改后从明天（或立即，若今天尚未开始）生效。</div>';
+  h += '<button class="ai-gen-btn" data-act="settings-save">保存学习量</button>';
+  h += '<div class="set-msg" id="setMsg"></div>';
+  h += '</div>';
+  /* ② AI 扩卡入口 */
+  h += '<div class="ai-card">';
+  h += '<div class="ai-head"><div class="t">AI 智能扩卡<small>粘贴一段知识，AI 帮你生成知识卡，扩充你的专属卡库</small></div></div>';
+  h += '<div class="set-sub" style="margin-bottom:12px;">生成的卡片会标记「我的」，进入每日学习队列优先学习；如未配置接口，请先完成下方配置。</div>';
+  h += '<button class="ai-gen-btn" data-act="tab" data-view="ai">进入 AI 扩卡</button>';
+  h += '</div>';
+  /* ③ AI 接口配置 */
+  h += '<div class="ai-card">';
+  h += '<div class="ai-head"><div class="t">AI 接口配置<small>供「AI 扩卡」生成知识卡使用，OpenAI 兼容接口</small></div></div>';
+  h += '<label style="display:block;font-size:11.5px;color:#6b7a99;font-weight:600;margin:0 0 4px;">接口地址（/chat/completions）</label>';
+  h += '<input id="aiCfgBase" style="width:100%;border:1.5px solid #e3eafc;border-radius:10px;padding:9px 11px;font-size:13px;outline:none;background:#fff;color:#182848;margin-bottom:10px;" placeholder="https://open.bigmodel.cn/api/paas/v4/chat/completions" value="'+(cfg?(cfg.base||''):'').replace(/"/g,'&quot;')+'">';
+  h += '<div class="row" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">';
+  h += '<div style="flex:1;min-width:140px;"><label style="display:block;font-size:11.5px;color:#6b7a99;font-weight:600;margin:0 0 4px;">API Key</label><input id="aiCfgKey" type="password" style="width:100%;border:1.5px solid #e3eafc;border-radius:10px;padding:9px 11px;font-size:13px;outline:none;background:#fff;color:#182848;" placeholder="sk-..." value="'+(cfg?(cfg.key||''):'').replace(/"/g,'&quot;')+'"></div>';
+  h += '<div style="flex:1;min-width:140px;"><label style="display:block;font-size:11.5px;color:#6b7a99;font-weight:600;margin:0 0 4px;">模型名</label><input id="aiCfgModel" style="width:100%;border:1.5px solid #e3eafc;border-radius:10px;padding:9px 11px;font-size:13px;outline:none;background:#fff;color:#182848;" placeholder="glm-4-flash" value="'+(cfg?(cfg.model||''):'').replace(/"/g,'&quot;')+'"></div>';
+  h += '</div>';
+  h += '<div class="ai-presets">';
+  for(var p=0;p<AI_PRESETS.length;p++){ h += '<button data-act="ai-preset" data-i="'+p+'">'+AI_PRESETS[p].name+'</button>'; }
+  h += '</div>';
+  h += '<div style="margin-top:12px;"><button class="ai-gen-btn" data-act="ai-cfg-save">保存 AI 配置</button></div>';
+  h += '<div class="set-msg" id="setAiMsg"></div>';
+  h += '<div class="set-sub">Key 仅保存在当前浏览器（localStorage），不会随学习进度上传到云端。</div>';
+  h += '</div>';
+  el.innerHTML = h;
+}
+function saveSettings(){
+  var rv = parseInt(document.getElementById('setReview').value, 10);
+  var nv = parseInt(document.getElementById('setNew').value, 10);
+  var msgEl = document.getElementById('setMsg');
+  function err(t){ if(msgEl){ msgEl.textContent = t; msgEl.className = 'set-msg err'; } }
+  if(isNaN(rv) || rv<0 || rv>99){ err('每日复习需为 0~99 的数字'); return; }
+  if(isNaN(nv) || nv<0 || nv>99){ err('每日新知需为 0~99 的数字'); return; }
+  if(rv===0 && nv===0){ err('复习与新知不能同时为 0，至少保留一项'); return; }
+  state.cfg.reviewLimit = rv;
+  state.cfg.newLimit = nv;
+  save();
+  /* 若今日队列尚未开始（未打卡任何一张），立即按新配置重建今日队列 */
+  var t = today(), day = state.days[t];
+  var immediate = day && !day.done && day.idx===0;
+  if(immediate){ delete state.days[t]; ensureDay(); save(); }
+  if(msgEl){
+    msgEl.textContent = '已保存！' + (immediate ? ' 今日队列已按新配置更新。' : ' 将从明天开始生效。') + '（当前：每天复习 ' + rv + ' 张 + 学习 ' + nv + ' 张）';
+    msgEl.className = 'set-msg';
+  }
+  updateDateLine();
+}
+
+/* ---------------- 账号系统 ---------------- */
+/* CloudBase 云模式：cloudMode=true 时账号与进度走云端 */
+var cloudMode = false;
+var CB = { app:null, auth:null, db:null };
+var _uploadTimer = null;
+function cloudTip(msg, err){
+  var el = document.getElementById('cloudTip');
+  if(!el) return;
+  el.style.display = 'block';
+  el.textContent = (msg || '') + (err && err.message ? '：' + err.message : '');
+  el.style.color = '#c0392b';
+  if(err) console.warn('CloudBase:', err);
+}
+function initCloud(){
+  if(!CLOUDBASE_CFG.env){ showConnFail('未配置云端环境（CLOUDBASE_CFG.env 为空），请把此提示反馈给 dodo'); return; }
+  if(typeof cloudbase !== 'undefined'){ trySetupCloud(); return; }
+  /* SDK 未就绪：按需异步加载；加载失败/超时展示明确的重试界面（不降级本地模式） */
+  var done = false;
+  var timer = setTimeout(function(){
+    if(done) return;
+    done = true;
+    showConnFail('连接云端超时：请检查网络后重试');
+  }, 15000);
+  var s = document.createElement('script');
+  s.src = CLOUDBASE_SDK_URL;
+  s.async = true;
+  s.onload = function(){
+    if(done) return;
+    done = true; clearTimeout(timer);
+    trySetupCloud();
+  };
+  s.onerror = function(){
+    if(done) return;
+    done = true; clearTimeout(timer);
+    showConnFail('云端组件加载失败：请检查网络后重试');
+  };
+  document.head.appendChild(s);
+}
+/* v11.1：云端就绪后——有持久化会话且在 30 天免登录期内直接进入；否则显示注册/登录页 */
+/* v11.3：先探测认证线路（经典域/网关域），把 SDK 指向可达线路，避免首次请求必失败 */
+function trySetupCloud(){
+  if(typeof cloudbase === 'undefined') return;
+  try{
+    CB.app = cloudbase.init({ env: CLOUDBASE_CFG.env, region: CLOUDBASE_CFG.region });
+    if(!CB.app || typeof CB.app.auth !== 'function'){
+      showConnFail('云端环境未生效（SDK 不完整），请反馈此提示');
+      return;
+    }
+    pickBestOrigin().then(function(best){
+      if(best === null){
+        showConnFail('无法连接云开发服务（' + CLOUDBASE_CFG.env + '）：当前网络无法访问腾讯云服务器，请检查网络设置（或切换手机热点重试）后点「重试连接」');
+        return;
+      }
+      applyApiOrigin(best);
+      finishCloudSetup();
+    });
+  }catch(e){
+    var emsg = (e && e.message) ? e.message : String(e);
+    if(/sandboxed|localStorage|SecurityError/i.test(emsg)){
+      showConnFail('当前为受限预览窗口（沙箱），无法使用账号体系。请把本页地址复制到浏览器（Chrome/Edge）地址栏打开，或下载 HTML 文件用浏览器打开');
+    }else{
+      showConnFail('云端环境初始化失败：' + emsg);
+    }
+  }
+}
+/* 线路确定后完成初始化（认证实例/数据库/登录态监听/会话判定） */
+function finishCloudSetup(){
+  CB.auth = CB.app.auth({ persistence: 'local' });
+  CB.db = CB.app.database();
+  cloudMode = true;
+  /* 云端就绪后必须补挂登录态监听，否则注册/登录成功时无监听触发跳转 */
+  setupAuthListener();
+  var el = document.getElementById('cloudTip');
+  if(el){ el.style.display = 'none'; }
+  /* 有持久化会话（上次在本设备登录过）：交给 cloudEnter 做 30 天免登录校验；
+     无会话：首次进入需注册 / 已注册需登录 */
+  var cu0 = cloudSessUser();
+  if(cu0 && userKey(cu0)){ cloudEnter(cu0); return; }
+  showAuth();
+}
+/* 统一取用户身份键：兼容多种 SDK 形态（v3 用 id，历史版本用 uid/userId） */
+function userKey(u){
+  if(!u) return '';
+  if(typeof u === 'string') return u;
+  return u.uid || u.userId || u.id || u.user_id || u.sub || '';
+}
+function cloudUid(){ var u = currentUser; return userKey(u) || u; }
+/* 展示名：优先取用户名/昵称/邮箱/手机号；无身份字段时取 uid 短码兜底 */
+function userLabel(u){
+  if(!u) return '';
+  if(typeof u === 'string') return u;
+  if(u.username) return u.username;
+  if(u.nickname) return u.nickname;
+  if(u.email) return u.email;
+  if(u.phone) return u.phone;
+  var uid = userKey(u);
+  if(!uid) return '用户';
+  return '用户' + String(uid).replace(/^hxy-?/i, '').slice(0, 6);
+}
+/* 头像首字母：取当前登录用户名/账号的大写首字母 */
+function updateAvatar(){
+  var el = document.getElementById('avatarInitial');
+  if(!el) return;
+  var n = userLabel(currentUser);
+  el.textContent = n ? n.charAt(0).toUpperCase() : 'A';
+}
+function cloudEnter(user){
+  /* v11.1：统一入口做 30 天免登录校验——注册/登录/会话恢复都经此进入；
+     超期则强制登出并提示重新登录（防止 SDK 自动恢复会话绕过 30 天限制） */
+  var uid = userKey(user);
+  var lu = loadLoginTs();
+  if(lu && lu.uid === uid && Date.now() - lu.ts > LOGIN_TTL_MS){
+    try{ if(CB && CB.auth && CB.auth.signOut) CB.auth.signOut(); }catch(e0){}
+    try{ if(CB && CB.auth && CB.auth.clearCachedLoginState) CB.auth.clearCachedLoginState(); }catch(e0){}
+    clearLoginTs();
+    /* 稍作延迟展示提示，避免被 SDK 登出回调（showAuth）抢先清空 */
+    setTimeout(function(){ showAuth('本设备登录已超过 30 天，请重新登录'); }, 400);
+    return;
+  }
+  currentUser = user;
+  /* 首次登录/切换账号时记录本设备登录时间戳（30 天免登录）；已在有效期内则保持原时间戳 */
+  if(!lu || lu.uid !== uid) saveLoginTs(uid);
+  /* v11.4：用户数据入库（users 集合，按 uid 隔离：邮箱/昵称/首次时间/最近登录） */
+  saveUserProfile(user);
+  loadUserCards();
+  fetchCloudState().then(function(){
+    var sc = document.getElementById('authScreen'); if(sc) sc.style.display = 'none';
+    var w = document.querySelector('.wrap'); if(w) w.style.display = '';
+    updateAvatar();
+    renderAll();
+  });
+}
+/* 兼容多种 js-sdk 形态：
+ * 旧版：signUp(username, password) / signInWithUsernameAndPassword(username, password)
+ * 新版：注册必须传 email（或 phone），password 作为登录密码；
+ *      密码登录走 signInWithPassword({username, password})，username 可填邮箱/手机号/用户名
+ * 登录态监听：onLoginStateChanged / onAuthStateChange 双兼容 */
+function cbAuthStyle(){
+  if(!CB.auth) return null;
+  if(typeof CB.auth.signInWithPassword === 'function') return 'new';
+  if(typeof CB.auth.signInWithUsernameAndPassword === 'function') return 'legacy';
+  return null;
+}
+/* v10.14：CloudBase「邮箱验证码」模式注册流程两步走：
+ * 1) signUp({email, password}) → SDK 自动向邮箱发送验证码，返回 {data:{verifyOtp}} 注册句柄
+ * 2) 用户填入 6 位验证码 → verifyOtp({token: code}) 完成注册（校验通过即建号，无需再点邮件链接） */
+var _vcodeVerifyOtp = null;   /* 注册句柄（verifyOtp） */
+var _vcodeCdTimer = null;     /* 倒计时定时器 */
+function cbSignUp(u, p){
+  var err = new Error('当前版本 SDK 不支持验证码注册（请将页面提示反馈给 dodo）');
+  if(!CB.auth || typeof CB.auth.signUp !== 'function') return Promise.reject(err);
+  if(cbAuthStyle() !== 'new') return Promise.reject(new Error('当前 SDK 版本不支持邮箱验证码注册，请升级 SDK'));
+  return CB.auth.signUp({ email: u, password: p }).then(function(res){
+    /* 正常返回形态：{data:{verifyOtp:fn}}；部分版本直接返回 verifyOtp 所在对象 */
+    var v = (res && res.data) ? res.data : res;
+    if(v && typeof v.verifyOtp === 'function'){ _vcodeVerifyOtp = v.verifyOtp; return res; }
+    /* 发送失败：透传完整原始错误（含 category/code/helpMessage），便于定位（如 smtp 未配置的具体细节） */
+    throw new Error(authErrText(res && res.error ? res.error : res));
+  });
+}
+/* 用户输入验证码后提交注册 */
+function cbSubmitReg(code){
+  var vf = _vcodeVerifyOtp;
+  if(!vf || typeof vf !== 'function') return Promise.reject(new Error('请先点击「获取验证码」'));
+  return Promise.resolve(vf({ token: String(code) })).then(function(res){
+    var e = normAuthRes(res); if(e) throw e;
+    return res;
+  });
+}
+/* 发送验证码（注册第一步），带 60 秒重发倒计时 */
+/* 提取云端错误的完整可读信息（含错误码/类别），用于排查时展示原始细节 */
+function authErrText(err){
+  if(!err) return '未知错误';
+  var it = (err.error === undefined) ? err : err.error;
+  var code = (it && (it.category || it.code || it.errorCode || it.error_code)) ? (it.category || it.code || it.errorCode || it.error_code) : '';
+  var extra = (it && (it.helpMessage || it.message)) || err.message || '';
+  /* 附加更精确的定位信息（服务端类型码 / 请求 ID），便于排查 */
+  var tail = [];
+  if(it && it.code != null && String(code).toUpperCase() !== String(it.code).toUpperCase()) tail.push('code=' + it.code);
+  if(it && it.errorCode != null && String(code) !== String(it.errorCode) && String(it.errorCode) !== String(it.code)) tail.push('errCode=' + it.errorCode);
+  if(it && it.requestId) tail.push('reqId=' + String(it.requestId).slice(0, 12));
+  var s = (code ? '[' + code + '] ' : '') + extra + (tail.length ? '（' + tail.join('，') + '）' : '');
+  return s.length > 260 ? s.slice(0, 260) + '…' : (s || '未知错误');
+}
+/* 是否为可重试的瞬时性错误（网关抖动/超时/服务临时不可用等；含 gRPC 码 4/10/12/13/14） */
+function isTransientErr(err){
+  if(!err) return false;
+  var it = (err.error === undefined) ? err : err.error;
+  var s = String([it && it.category, it && it.code, it && it.status, it && it.message].join('|') + '|' + (err.message || '')).toUpperCase();
+  if(/SERVICE_ERROR|UNAVAILABLE|ABORTED|INTERNAL|TIMEOUT|TIME_OUT|ECONN|NETWORK|5[0-9][0-9]/.test(s)) return true;
+  var ec = Number(it && (it.errorCode != null ? it.errorCode : (it.error_code != null ? it.error_code : NaN)));
+  return [4, 10, 12, 13, 14].indexOf(ec) !== -1;
+}
+/* 是否网络层不可达（fetch 抛错：DNS/连接被拦截等，SDK 会以 code=unreachable 或 {error:'unreachable'} 透出） */
+function isUnreachableErr(err){
+  if(!err) return false;
+  var it = (err.error && typeof err.error === 'object') ? err.error : err;
+  var s = String([it && it.code, it && it.error, it && it.errorCode].join('|')).toLowerCase();
+  var d = String(it && it.error_description || it && it.message || '');
+  /* v11.16：SDK 常把 code=unreachable 包在 [SERVICE_ERROR] 的 message 里（如「服务异常…(code=unreachable, reqid=…)」），
+     同样按网络不可达处理，触发线路切换/重试，并给出短提示 */
+  return /(^|\|)unreachable(\||$)/.test(s) || /failed to fetch|networkerror|load failed|fetch failed|net::|unreachable/i.test(d);
+}
+/* v11.3：SDK 认证请求走 XMLHttpRequest，fetch 重写（v11.2）对认证请求无效；
+   改用 SDK 官方端点注册接口（app.registerEndPoint）做「真实线路切换」：
+   - 经典域（CLOUD_API，SDK 默认）：{env}.{region}.tcb-api.tencentcloudapi.com
+   - 网关域（GATEWAY）：{env}.api.tcloudbasegateway.com
+   启动时用 XHR 探测两条线路，取可达者承载后续认证请求；运行中遇 code=unreachable
+   自动切到另一条线路（一次）并重试 */
+var _altOriginOn = false;   /* 已启用备用线路（网关域） */
+function apiOriginUrls(){
+  var env = CLOUDBASE_CFG.env, region = CLOUDBASE_CFG.region || 'ap-shanghai';
+  return {
+    region: 'https://' + env + '.' + region + '.tcb-api.tencentcloudapi.com',
+    gateway: 'https://' + env + '.api.tcloudbasegateway.com'
+  };
+}
+/* 探测一个地址是否可达（任意 HTTP 响应/403 均视为可达，仅网络层失败为不可达；
+   非浏览器环境（自动化测试）不探测，直接判定可达） */
+function probeReach(url, timeout){
+  /* v11.5：改用 fetch(mode:'no-cors') 探测——XHR 探测会被浏览器 CORS 策略拦截
+     （腾讯云对域名根路径 / 的响应不带 Access-Control-Allow-Origin 头），
+     导致 status=0 被误判为「不可达」。no-cors 模式下只要服务器有响应
+     （任意 HTTP 状态码）即 resolve（opaque），仅网络层失败（DNS/连接/超时）才 reject，
+     与「线路是否可达」语义完全一致，不会误报。 */
+  if(typeof fetch !== 'function') return Promise.resolve(true);   /* 无 fetch 环境（测试）→ 视为可达 */
+  var ms = timeout || 5000;
+  var ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
+  var req = fetch(url, { mode: 'no-cors', cache: 'no-store', signal: ctrl ? ctrl.signal : undefined });
+  var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, ms) : null;
+  return req.then(function(){ if(timer) clearTimeout(timer); return true; })
+             .catch(function(){ if(timer) clearTimeout(timer); return false; });
+}
+/* 探测两条线路：返回可达线路名（'region'/'gateway'），都不可达返回 null */
+function pickBestOrigin(){
+  if(typeof fetch !== 'function') return Promise.resolve('region');
+  var o = apiOriginUrls();
+  return Promise.all([probeReach(o.gateway), probeReach(o.region)]).then(function(r){
+    if(r[1]) return 'region';     /* 经典域（SDK 默认）可达：保持默认 */
+    if(r[0]) return 'gateway';    /* 仅网关域可达：切到网关域 */
+    return null;                  /* 两条都不可达 */
+  });
+}
+/* 把 SDK 认证请求指向指定线路（'gateway' 才需要显式注册；'region' 为 SDK 默认，无需操作） */
+function applyApiOrigin(which){
+  if(which !== 'gateway') return;
+  try{
+    if(CB && CB.app && typeof CB.app.registerEndPoint === 'function'){
+      CB.app.registerEndPoint(apiOriginUrls().gateway, 'https:');
+      _altOriginOn = true;
+    }
+  }catch(e){}
+}
+/* 网络层不可达时启用备用线路（真实切换 SDK 认证端点，只生效一次）；
+   返回 true 表示本次已切换，调用方可自动重试当前操作 */
+function switchToAltOrigin(){
+  if(_altOriginOn || !CLOUDBASE_CFG.env) return false;
+  applyApiOrigin('gateway');
+  return _altOriginOn;
+}
+function tryAltOrigin(err){
+  if(!isUnreachableErr(err)) return false;
+  if(switchToAltOrigin()){
+    authMsg('默认线路不可达，已切换备用线路，正在重试…');
+    return true;
+  }
+  return false;
+}
+function sendAuthCode(){
+  if(!cloudMode){ authMsg('云端尚未就绪，请重试', false); return; }
+  var u = (document.getElementById('authUser').value || '').trim();
+  var p = document.getElementById('authPw').value || '';
+  /* 邮箱即账号：校验邮箱格式与密码规则（8-16 位） */
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(u)){ authMsg('请先输入正确的邮箱账号', false); return; }
+  if(p.length < 8 || p.length > 16 || !/[A-Za-z]/.test(p) || !/\d/.test(p)){ authMsg('请先设置密码（8-16 位，含字母和数字），再获取验证码', false); return; }
+  /* 注册模式下「确认密码」必须与密码一致才允许发送验证码 */
+  var p2El = document.getElementById('authPw2');
+  if(p2El && p2El.style.display !== 'none' && (p2El.value || '') !== p){
+    authMsg('两次输入的密码不一致，请重新确认', false); return;
+  }
+  var btn = document.getElementById('btnSendCode');
+  if(btn && btn.getAttribute('disabled')) return;
+  authMsg('正在发送验证码…');
+  var st = new Promise(function(_, rej){ setTimeout(function(){ rej(new Error('发送超时：云端无响应，请检查网络后重试')); }, 15000); });
+  Promise.race([cbSignUp(u, p), st])
+    .then(function(){
+      authMsg('验证码已发送至 ' + u + '，请查收（留意垃圾邮件），1 分钟内有效', true);
+      startCd(60);
+    })
+    .catch(function(err){
+      /* 默认线路不可达（code=unreachable）→ 真实切换备用线路并自动重发一次验证码 */
+      if(tryAltOrigin(err)){ setTimeout(function(){ sendAuthCode(); }, 400); return; }
+      /* v11.17：验证码发送失败统一短提示，不再展示云端长串文案；
+         v11.18：完整错误输出到浏览器控制台（F12→Console），便于定位根因；
+         v11.19：发送失败后按钮进入 10 秒冷却——云开发邮件服务限 10 封/分钟，
+         防止快速连点触发送信限流（成功发送仍为 60 秒倒计时） */
+      console.warn('验证码发送失败（详情如下）', err);
+      authMsg('验证码发送失败', false);
+      startCd(10);
+    });
+}
+function startCd(n){
+  var btn = document.getElementById('btnSendCode');
+  if(!btn) return;
+  if(_vcodeCdTimer) clearInterval(_vcodeCdTimer);
+  var left = n;
+  btn.setAttribute('disabled', '1'); btn.textContent = left + 's 后重发';
+  _vcodeCdTimer = setInterval(function(){
+    left--;
+    if(left <= 0){ resetSendBtn(false); }
+    else { btn.textContent = left + 's 后重发'; }
+  }, 1000);
+}
+function resetSendBtn(full){
+  if(_vcodeCdTimer){ clearInterval(_vcodeCdTimer); _vcodeCdTimer = null; }
+  var btn = document.getElementById('btnSendCode');
+  if(!btn) return;
+  btn.removeAttribute('disabled');
+  btn.textContent = full ? '获取验证码' : '重新获取';
+}
+/* SDK 部分版本在登录/注册失败时只打印日志不 reject，这里把错误对象规范化成可直接展示的 Error */
+function normAuthRes(res){
+  if(!res) return null;
+  var it = (res.error === undefined) ? res : res.error;
+  if(!it || (it.category === undefined && it.code === undefined && it.message === undefined)) return null;
+  var cat = String(it.category || it.code || it.errorCode || '');
+  var msg = res.helpMessage || it.helpMessage || it.message || '';
+  if(/PROVIDER_NOT_ENABLED|NOT_ENABLED/i.test(cat)) return new Error('云端未开启「用户名密码登录」：请在云开发控制台 → 身份认证 → 登录方式中开启后重试');
+  if(/INVALID_CREDENTIALS/i.test(cat)) return new Error('用户名或密码错误，请重新输入');
+  if(/USER_NOT_FOUND/i.test(cat)) return new Error('该账号尚未注册，请先注册（注册成功后才能登录）');
+  if(/NO_USER|NOT_LOGIN|SIGNED_OUT/i.test(cat)) return new Error('未获取到登录态，账号可能尚未注册，请先注册');
+  if(/INVALID_OTP|OTP_|VERIFY|WRONG_CODE|CODE_EXPIRED|INVALID_CODE/i.test(cat)) return new Error('验证码错误或已过期，请重新获取');
+  if(/smtp|MAIL_SEND|SEND_MAIL|SMS_|WEDAAPI/i.test(cat + '|' + msg)) return new Error('云端发送验证码失败：请在云开发控制台「身份认证 → 登录方式」确认已开启邮箱验证码，并在「配置发件人」中保存生效（推荐云开发邮件服务）');
+  return new Error('操作未完成：' + (msg || cat || '云端返回异常'));
+}
+function cbSignIn(u, p){
+  var err = new Error('当前版本 SDK 不支持账号密码登录（请将页面提示反馈给 dodo）');
+  if(cbAuthStyle() === 'new' && typeof CB.auth.signInWithPassword === 'function'){
+    return CB.auth.signInWithPassword({ username: u, password: p })
+      .then(function(res){ var e = normAuthRes(res); if(e) throw e; return res; });
+  }
+  if(cbAuthStyle() === 'legacy' && typeof CB.auth.signInWithUsernameAndPassword === 'function'){
+    return CB.auth.signInWithUsernameAndPassword(u, p);
+  }
+  return Promise.reject(err);
+}
+function cbOnAuthStateChange(cb){
+  if(!CB.auth) return false;
+  /* 兼容多种登录态回调形态：(user) / (event, user) / (event, session) */
+  var norm = function(a, b){
+    var u = (b && b.user && !b.uid) ? b.user : b;
+    if(!u) u = (a && a.user && !a.uid) ? a.user : a;
+    if(!u || typeof u !== 'object' || (!userKey(u) && !u.username && !u.email && !u.phone)) u = null;
+    cb(u);
+  };
+  if(typeof CB.auth.onAuthStateChange === 'function'){
+    CB.auth.onAuthStateChange(function(){ norm(arguments[0], arguments[1]); });
+    return true;
+  }
+  if(typeof CB.auth.onLoginStateChanged === 'function'){
+    CB.auth.onLoginStateChanged(function(){ norm(arguments[0], arguments[1]); });
+    return true;
+  }
+  return false;
+}
+/* 注册登录态监听（幂等，只挂一次）。SDK 异步加载就绪后也会调用，保证登录成功必跳转 */
+/* v11.4：用户数据入库——注册/登录成功后把账号信息写入 users 集合（doc = uid）。
+   数据字段：email / nickname / createdAt（首次注册）/ lastLoginAt（最近登录）。
+   与进度一样按账号隔离：换设备用同一邮箱登录后可自动带出（为后续账号管理、统计预留）。 */
+var _needCreateCollection = false;   /* 云端集合缺失标记（控制台建集合后自动恢复） */
+function isCollectionMissingErr(e){
+  if(!e) return false;
+  var it = (e.error && typeof e.error === 'object') ? e.error : e;
+  var s = String([it && it.code, it && it.message, it && it.errorCode, (e && e.message) || ''].join('|')).toUpperCase();
+  return /COLLECTION_NOT_EXIST|DATABASE_COLLECTION|NOT_EXIST|集合不存在|502005/.test(s);
+}
+function noteCollectionMissing(){ _needCreateCollection = true; }
+/* v11.7：按字段查 users 集合（用于注册前查重、登录前确认账号存在）。
+   返回 {state:'ok', data} / {state:'missing'} / {state:'none'}（查询失败不阻塞主流程） */
+function lookupUsers(field, value){
+  if(!CB || !CB.db || !CB.db.collection || !value) return Promise.resolve({ state: 'none' });
+  var q = {};
+  q[field] = String(value);
+  var p;
+  try{
+    p = CB.db.collection('users').where(q).limit(1).get();
+  }catch(e){ return Promise.resolve({ state: 'none' }); }
+  return p.then(function(res){
+      var list = (res && res.data) || [];
+      return { state: list.length ? 'ok' : 'missing', data: list[0] || null };
+    })
+    .catch(function(e){
+      /* 集合缺失 / 无读权限（仅创建者可读写）时无法确认 → 返回 none，由调用方降级处理 */
+      if(isCollectionMissingErr(e)){ noteCollectionMissing(); }
+      return { state: 'none' };
+    });
+}
+function saveUserProfile(user){
+  if(!CB || !CB.db || !user) return Promise.resolve();
+  var uid = String(userKey(user) || '');
+  if(!uid) return Promise.resolve();
+  var email = user.email || '';
+  var nick = user.nickname || user.username || email || '';
+  var now = Date.now();
+  /* 先 update（合并）：文档不存在时返回 updated:0，再 set 创建（含首次注册时间），避免覆盖历史数据 */
+  try{
+    return CB.db.collection('users').doc(uid).update({ email: email, nickname: nick, lastLoginAt: now })
+      .then(function(r){
+        if(!r || !r.updated || r.updated === 0){
+          return CB.db.collection('users').doc(uid).set({ email: email, nickname: nick, createdAt: now, lastLoginAt: now });
+        }
+      })
+      .catch(function(e){
+        if(isCollectionMissingErr(e)){ noteCollectionMissing(); }
+        else if(isUnreachableErr(e)){ switchToAltOrigin(); }
+        console.warn('用户档案保存失败', e);
+      });
+  }catch(e){
+    /* 集合调用本身异常（非 Promise 拒绝）不应阻断登录主流程：档案写入是尽力而为 */
+    return Promise.resolve();
+  }
+}
+var _authListenerOn = false;
+function setupAuthListener(){
+  if(_authListenerOn) return;
+  _authListenerOn = true;
+  var cbOk = false;
+  try{
+    cbOk = cbOnAuthStateChange(function(user){
+      if(user){
+        cloudEnter(user);
+      } else {
+        currentUser = null;
+        showAuth();
+        ['authUser','authPw','authPw2','authVcode'].forEach(function(id){
+          var el = document.getElementById(id); if(el) el.value = '';
+        });
+      }
+    });
+  }catch(e){
+    cloudTip('登录态监听注册失败', e);
+  }
+  if(!cbOk) cloudTip('当前 SDK 无法监听登录态（未找到 onAuthStateChange / onLoginStateChanged），注册或登录后可能无跳转。请把本提示反馈给 dodo 以便适配');
+}
+/* 注册/登录后若登录态回调未触发（部分 SDK 版本差异），尝试直接读取当前会话用户兜底 */
+function cloudSessUser(){
+  if(!CB || !CB.auth) return null;
+  try{
+    var u = CB.auth.currentUser;
+    if(u) return u;
+  }catch(e){}
+  return null;
+}
+function fetchCloudState(){
+  if(!CB.db || !currentUser) return Promise.resolve();
+  try{
+    var local = load();
+    return CB.db.collection('user_progress').doc(String(cloudUid())).get()
+      .then(function(res){
+        if(res && res.data && res.data.data){
+          try{
+            var s = JSON.parse(res.data.data);
+            for(var k in DEFAULT_STATE){ if(s[k]===undefined) s[k]=DEFAULT_STATE[k]; }
+            /* v10.24：本机今天已打卡完成但云端是旧数据（未完成）→ 以本机为准，
+               防止打卡后上传未完成/失败时被云端旧数据覆盖；随后 save() 会重新上传本机最新版 */
+            var t = today();
+            var localDone = !!(local.days && local.days[t] && local.days[t].done);
+            var cloudDone = !!(s.days && s.days[t] && s.days[t].done);
+            state = (localDone && !cloudDone) ? local : s;
+          }catch(e){ state = local; }
+        } else {
+          state = local;
+        }
+        save();
+      })
+      .catch(function(e){ if(isUnreachableErr(e)) switchToAltOrigin(); state = local; save(); });
+  }catch(e){ return Promise.resolve(); }
+}
+function scheduleCloudUpload(){
+  if(_uploadTimer) clearTimeout(_uploadTimer);
+  _uploadTimer = setTimeout(uploadCloudState, 800);
+}
+function uploadCloudState(){
+  _uploadTimer = null;
+  if(!CB.db || !currentUser) return;
+  CB.db.collection('user_progress').doc(String(cloudUid()))
+    .set({ data: JSON.stringify(state) })
+    .catch(function(e){ if(isUnreachableErr(e)) switchToAltOrigin(); console.warn('进度云同步失败', e); });
+}
+/* v10.24：关闭/刷新页面时立即上传一次，避免 800ms 防抖窗口内关闭导致进度未同步 */
+window.addEventListener('pagehide', function(){
+  if(cloudMode && currentUser) uploadCloudState();
+});
+/* v11.0：删除本地账号体系（用户名/密码注册登录、guest 访客、哈希加盐等），
+   身份认证统一走 CloudBase——首次注册邮箱账号，之后本设备 30 天免登录 */
+function authMsg(t, ok){
+  var el = document.getElementById('authMsg');
+  if(!el) return;
+  el.textContent = t || '';
+  el.className = 'auth-msg' + (ok === false ? ' err' : '');
+}
+function setAuthMode(m){
+  var isReg = (m === 'register');
+  var tabs = document.querySelectorAll('.auth-tab');
+  for(var i=0;i<tabs.length;i++) tabs[i].classList.toggle('on', tabs[i].getAttribute('data-mode')===m);
+  /* v11.10：登录/注册切换 tab 置于表单最上方（输入框之上）；
+     注册 = 切换→邮箱→密码→确认密码→验证码→提交；登录 = 切换→邮箱→密码→提交 */
+  var pw = document.getElementById('authPw'); if(pw) pw.style.order = '3';
+  var p2 = document.getElementById('authPw2');
+  if(p2){ p2.style.display = isReg ? '' : 'none'; p2.style.order = isReg ? '4' : ''; }
+  var au = document.getElementById('authUser');
+  if(au){ au.style.order = '2'; au.placeholder = '邮箱账号（如 name@example.com）'; }
+  var vrow = document.getElementById('authVcodeRow');
+  if(vrow){ vrow.style.display = isReg ? 'flex' : 'none'; vrow.style.order = isReg ? '5' : ''; }
+  var vcode = document.getElementById('authVcode'); if(vcode) vcode.value = '';
+  _vcodeVerifyOtp = null; resetSendBtn(true);
+  /* 提交按钮：注册 6 / 登录 4（始终在输入框之后、连接诊断之上） */
+  var sub = document.getElementById('authSubmit');
+  if(sub){ sub.style.order = isReg ? '6' : '4'; sub.textContent = isReg ? '注 册' : '登 录'; }
+  var tsw = document.querySelector('.auth-tabs');
+  if(tsw){ tsw.style.order = '1'; }
+  authMsg('');
+}
+/* v11.1：启动连接中（隐藏操作按钮，仅展示状态） */
+function showConnecting(msg){
+  var sc = document.getElementById('authScreen'); if(sc) sc.style.display = 'flex';
+  var w = document.querySelector('.wrap'); if(w) w.style.display = 'none';
+  authMsg(msg || '正在连接云端…');
+  var rb = document.getElementById('retryBtn'); if(rb) rb.style.display = 'none';
+  var fb = document.getElementById('authFormBox'); if(fb) fb.style.display = 'none';
+}
+/* v11.1：连接失败（不降级本地模式，展示「重试连接」按钮） */
+function showConnFail(msg){
+  var sc = document.getElementById('authScreen'); if(sc) sc.style.display = 'flex';
+  var w = document.querySelector('.wrap'); if(w) w.style.display = 'none';
+  authMsg(msg || '连接失败，请重试', false);
+  var rb = document.getElementById('retryBtn'); if(rb) rb.style.display = '';
+  var fb = document.getElementById('authFormBox'); if(fb) fb.style.display = 'none';
+}
+/* 注册/登录页：首次进入（本设备无账号记录）默认「注册」标签，注册过默认「登录」标签 */
+function showAuth(msg){
+  var sc = document.getElementById('authScreen'); if(sc) sc.style.display = 'flex';
+  var w = document.querySelector('.wrap'); if(w) w.style.display = 'none';
+  var rb = document.getElementById('retryBtn'); if(rb) rb.style.display = 'none';
+  var fb = document.getElementById('authFormBox'); if(fb) fb.style.display = '';
+  var hasAcc = false; try{ hasAcc = !!localStorage.getItem(HAS_ACCOUNT_KEY); }catch(e){}
+  setAuthMode(hasAcc ? 'login' : 'register');
+  authMsg(msg || '');
+}
+function doLogin(){
+  var u = (document.getElementById('authUser').value || '').trim();
+  var p = document.getElementById('authPw').value || '';
+  if(!u){ authMsg('请输入邮箱账号', false); return; }
+  if(!p){ authMsg('请输入密码', false); return; }
+  authMsg('登录中…');
+  /* 按登录流程——先查 users 集合确认账号存在（邮箱即用户名），存在则用邮箱校验密码 */
+  lookupUsers('email', u).then(function(r){
+    if(r.state === 'ok' && r.data && r.data.email){ return r.data.email; }
+    if(r.state === 'missing'){ authMsg('账号不存在，请先注册', false); return null; }
+    return u;   /* 查不到（无读权限/集合未建等）：降级直接以原输入登录，由云端判定 */
+  }).then(function(ident){
+    if(ident === null) return;
+    /* 15 秒超时兜底：SDK 若挂起（网络异常等）也不能让界面卡在"登录中" */
+    var to = new Promise(function(_, rej){ setTimeout(function(){ rej(new Error('登录超时：云端无响应，请检查网络后重试')); }, 15000); });
+    return Promise.race([cbSignIn(ident, p), to])
+      .then(function(res){
+        /* 部分 SDK 登录成功后不触发登录态回调，主动兜底读取会话用户；
+           新版 SDK 的 signIn 返回值本身就可能携带 user */
+        var cu = (res && res.user) || cloudSessUser();
+        if(cu && !currentUser){ cloudEnter(cu); return; }
+        if(currentUser){ authMsg(''); return; }
+        authMsg('登录未完成：未获取到登录态，请重试（若持续如此请反馈给 dodo）', false);
+      })
+      .catch(function(err){
+        /* v11.3：默认线路不可达 → 切换备用线路并自动重试一次登录 */
+        if(tryAltOrigin(err)){ setTimeout(function(){ doLogin(); }, 400); return; }
+        var m = String((err && err.message) || '');
+        if(/尚未注册|USER_NOT_FOUND/.test(m)){ authMsg('账号不存在，请先注册', false); return; }
+        if(/密码错误|INVALID_CREDENTIALS/.test(m)){ authMsg('密码错误，可重新输入', false); return; }
+        /* v11.13：登录失败提示精简——只区分「网络错误」与「账号密码问题」两类 */
+        if(isUnreachableErr(err) || /failed to fetch|networkerror|network|timeout|超时|ECONN|aborted|unavailable|socket|unreachable/i.test(m)){
+          authMsg('网络错误，请检查网络后重试', false); return;
+        }
+        authMsg('邮箱或密码不正确，请重试', false);
+      });
+  });
+}
+function doRegister(){
+  var u = (document.getElementById('authUser').value || '').trim();
+  var p = document.getElementById('authPw').value || '';
+  var p2 = document.getElementById('authPw2').value || '';
+  /* 注册 = 邮箱（即账号）+ 密码（8-16 位，含字母和数字）+ 确认密码 + 验证码（1 分钟内有效） */
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(u)){ authMsg('注册需使用邮箱作为账号（格式如 name@example.com）', false); return; }
+  if(u.length > 64){ authMsg('邮箱地址过长', false); return; }
+  if(p.length < 8 || p.length > 16 || !/[A-Za-z]/.test(p) || !/\d/.test(p)){ authMsg('密码需 8-16 位，且同时包含字母和数字', false); return; }
+  if(p !== p2){ authMsg('两次输入的密码不一致', false); return; }
+  /* 注册 = 邮箱 + 密码 + 邮箱验证码（先「获取验证码」，再输入 6 位数字提交） */
+  var code = (document.getElementById('authVcode').value || '').trim();
+  if(!_vcodeVerifyOtp){ authMsg('请先点击「获取验证码」，再用邮箱收到的 6 位验证码完成注册', false); return; }
+  if(!/^\d{6}$/.test(code)){ authMsg('请输入 6 位数字验证码', false); return; }
+  authMsg('注册中…');
+  var rto = new Promise(function(_, rej){ setTimeout(function(){ rej(new Error('注册超时：云端无响应，请检查网络后重试')); }, 15000); });
+  Promise.race([cbSubmitReg(code), rto])
+    .then(function(res){
+      /* 验证码校验通过即注册成功（无需再点邮件链接）；多数版本已自动登录，未触发则取返回值/会话兜底 */
+      var su = (res && res.data && res.data.user) || (res && res.user) || null;
+      setTimeout(function(){
+        if(currentUser){ authMsg(''); return; }
+        if(su){ cloudEnter(su); return; }
+        var cu = cloudSessUser();
+        if(cu){ cloudEnter(cu); }
+        else { authMsg('注册成功！请切换到「登录」标签页，用该邮箱 + 密码登录', false); }
+      }, 200);
+    })
+    .catch(function(err){
+      /* v11.17：注册失败统一短提示（默认线路不可达时先切换备用线路，不再展示云端长串文案）；
+         v11.18：完整错误输出到浏览器控制台（F12→Console），便于定位根因 */
+      tryAltOrigin(err);
+      console.warn('注册失败（详情如下）', err);
+      authMsg('注册失败', false);
+    });
+}
+function doLogout(){
+  try{ if(CB && CB.auth && CB.auth.signOut) CB.auth.signOut(); }catch(e){}
+  try{ if(CB && CB.auth && CB.auth.clearCachedLoginState) CB.auth.clearCachedLoginState(); }catch(e){}
+  currentUser = null;
+  clearLoginTs();
+  showAuth();
+  ['authUser','authPw','authPw2','authVcode'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+}
+
+/* ---------------- 全局 ---------------- */
+function switchTab(v){
+  var btns = document.querySelectorAll('nav button');
+  for(var i=0;i<btns.length;i++) btns[i].classList.toggle('on', btns[i].getAttribute('data-view')===v);
+  document.getElementById('view-today').style.display = v==='today'?'':'none';
+  document.getElementById('view-lib').style.display = v==='lib'?'':'none';
+  document.getElementById('view-stats').style.display = v==='stats'?'':'none';
+  document.getElementById('view-ai').style.display = v==='ai'?'':'none';
+  flipped = false;
+  if(v==='today') renderToday();
+  if(v==='lib') renderLib();
+  if(v==='stats') renderStats();
+  if(v==='ai') renderAi();
+}
+/* v10.26：日期行恢复「年 月 日 · 星期X 复习N个 + 新知识M个」；自评按钮去掉数字角标；
+   快捷键提示改为按钮下方注释行；设置入口改为通用齿轮图标 */
+function updateDateLine(){
+  var el = document.getElementById('dateLine');
+  if(!el) return;
+  var d = new Date();
+  var weeks = ['日','一','二','三','四','五','六'];
+  el.textContent = d.getFullYear()+' 年 '+(d.getMonth()+1)+' 月 '+d.getDate()+' 日 · 星期'+weeks[d.getDay()]+' 复习'+state.cfg.reviewLimit+'个 + 新知识'+state.cfg.newLimit+'个';
+}
+function renderAll(){
+  document.getElementById('streakNum').textContent = state.streak.cur;
+  renderToday();
+}
+function celebrate(){
+  var box = document.createElement('div'); box.className='burst';
+  var cs = ['#2e5bff','#4e8cff','#7cb3ff','#f59e0b','#10b981','#ef4444'];
+  for(var i=0;i<26;i++){
+    var s=document.createElement('span');
+    s.style.background = cs[Math.floor(Math.random()*cs.length)];
+    s.style.width='10px'; s.style.height='10px'; s.style.borderRadius='50%'; s.style.display='inline-block';
+    s.style.left = (5+Math.random()*90)+'%';
+    s.style.top = (30+Math.random()*40)+'%';
+    s.style.animationDelay = (Math.random()*0.5)+'s';
+    box.appendChild(s);
+  }
+  document.body.appendChild(box);
+  setTimeout(function(){ box.remove(); }, 1800);
+}
+
+/* 事件委托：兼容 WebView / 企业浏览器（替代内联 onclick） */
+function closestEl(el, sel){
+  while(el && el !== document){
+    if(el.matches && el.matches(sel)) return el;
+    el = el.parentElement || el.parentNode;
+  }
+  return null;
+}
+document.addEventListener('click', function(e){
+  /* 点击弹窗遮罩关闭设置（仅当点击目标就是遮罩层本身） */
+  var mo = document.getElementById('settingsModal');
+  if(mo && mo.style.display !== 'none' && e.target === mo){ closeSettings(); return; }
+  var t = closestEl(e.target, '[data-act]');
+  if(!t) return;
+  var act = t.getAttribute('data-act');
+  if(act==='tab'){
+    var tv = t.getAttribute('data-view');
+    if(tv==='settings'){ openSettings(); }
+    else { closeSettings(); switchTab(tv); }
+  }
+  else if(act==='settings-open'){ openSettings(); }
+  else if(act==='settings-close'){ closeSettings(); }
+  else if(act==='bonus'){ bonus(); }
+  else if(act==='flip'){ flip(); }
+  else if(act==='bad'){ doGrade(false); }
+  else if(act==='good'){ doGrade(true); }
+  else if(act==='lib-cat'){ libCat = t.getAttribute('data-cat'); renderLib(); }
+  else if(act==='lib-toggle'){ toggleLib(t.getAttribute('data-id')); }
+  else if(act==='reset'){ resetAll(); }
+  else if(act==='export'){ exportData(); }
+  else if(act==='auth-tab'){ setAuthMode(t.getAttribute('data-mode')); }
+  else if(act==='auth-send-code'){ sendAuthCode(); }
+  else if(act==='cloud-retry'){ if(typeof location !== 'undefined' && location.reload) location.reload(); }
+  else if(act==='ai-preset'){ aiCfgPreset(parseInt(t.getAttribute('data-i'),10)||0); }
+  else if(act==='ai-cfg-save'){ aiCfgSave(); }
+  else if(act==='settings-save'){ saveSettings(); }
+  else if(act==='ai-gen'){ aiGen(); }
+  else if(act==='ai-save'){ aiSave(); }
+  else if(act==='ai-cancel'){ aiCancel(); }
+  else if(act==='ai-del'){ aiDel(t.getAttribute('data-id')); }
+  else if(act==='auth-submit'){
+    var on = document.querySelector('.auth-tab.on');
+    if(on && on.getAttribute('data-mode')==='register') doRegister(); else doLogin();
+  }
+  else if(act==='logout'){ doLogout(); }
+});
+/* v11.12：注册模式下密码/二次密码「输入即校验」——每敲一个字符立即给出提示，
+   无需等到提交或点「发送验证码」；登录模式不校验（密码只用于提交） */
+function authLiveCheck(which){
+  var pw = document.getElementById('authPw'), pw2 = document.getElementById('authPw2');
+  if(!pw || !pw2) return;
+  var t = document.querySelector('.auth-tab.on');
+  if(!t || t.getAttribute('data-mode') !== 'register') return;   /* 仅注册模式 */
+  var p = pw.value || '', p2 = pw2.value || '';
+  var pw2Visible = pw2.style.display !== 'none';
+  if(which === 'pw'){
+    if(p.length === 0){ authMsg(''); }
+    else if(p.length < 8){ authMsg('密码需 8-16 位（当前 ' + p.length + ' 位，且需含字母和数字）', false); }
+    else if(p.length > 16){ authMsg('密码最多 16 位', false); }
+    else if(!/[A-Za-z]/.test(p)){ authMsg('密码需包含字母', false); }
+    else if(!/\d/.test(p)){ authMsg('密码需包含数字', false); }
+    else if(pw2Visible && p2.length > 0){ authMsg(p2 === p ? '密码格式正确，两次输入一致' : '密码格式正确，但两次输入不一致', p2 === p); }
+    else { authMsg('密码格式正确', true); }
+  } else if(which === 'pw2'){
+    if(p2.length === 0){ authMsg(''); }
+    else if(p2 === p){ authMsg('两次输入一致', true); }
+    else { authMsg('两次输入的密码不一致', false); }
+  }
+}
+document.addEventListener('input', function(e){
+  if(e.target && e.target.id==='libSearch'){ libKw = e.target.value; renderLibList(); return; }
+  /* v11.12：密码/二次密码输入即校验（注册模式下实时反馈） */
+  if(e.target && (e.target.id==='authPw' || e.target.id==='authPw2')){
+    authLiveCheck(e.target.id === 'authPw' ? 'pw' : 'pw2');
+  }
+});
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape'){ closeSettings(); return; }
+  var view = document.getElementById('view-today').style.display;
+  if(view==='none') return;
+  var day = state.days[today()];
+  if(!day || day.done) return;
+  if(e.code==='Space'){ e.preventDefault(); flip(); }
+  if(e.key==='1' && flipped) doGrade(false);
+  if(e.key==='2' && flipped) doGrade(true);
+});
+var _origGrade = grade;
+grade = function(id, good){
+  var wasDone = state.days[today()] && state.days[today()].done;
+  _origGrade(id, good);
+  var nowDone = state.days[today()] && state.days[today()].done;
+  if(!wasDone && nowDone) celebrate();
+};
+(function init(){
+  window.__dodoBooted = true;
+  updateDateLine();
+  /* 登录框内按 Enter 直接提交 */
+  document.getElementById('authUser').addEventListener('keydown', authEnter);
+  document.getElementById('authPw').addEventListener('keydown', authEnter);
+  document.getElementById('authPw2').addEventListener('keydown', authEnter);
+  function authEnter(e){
+    if(e.key !== 'Enter') return;
+    var on = document.querySelector('.auth-tab.on');
+    if(on && on.getAttribute('data-mode')==='register') doRegister(); else doLogin();
+  }
+  /* v11.1：注册制——打开即进入连接态，SDK 就绪后：本设备 30 天免登录直接进入，
+     否则显示注册/登录页；失败时展示重试界面，不降级本地模式 */
+  showConnecting('正在连接云端…');
+  initCloud();
+})();
+</script>
+</body>
+</html>
