@@ -1419,6 +1419,21 @@ function authErrText(err){
   var s = (code ? '[' + code + '] ' : '') + extra + (tail.length ? '（' + tail.join('，') + '）' : '');
   return s.length > 260 ? s.slice(0, 260) + '…' : (s || '未知错误');
 }
+/* CloudBase 身份系统是注册查重的权威来源；users 集合采用创建者隔离，未登录时可能无权跨用户查询。 */
+function isAccountExistsErr(err){
+  if(!err) return false;
+  var it = (err.error && typeof err.error === 'object') ? err.error : err;
+  var s = String([
+    it && it.code,
+    it && it.category,
+    it && it.errorCode,
+    it && it.error_code,
+    it && it.message,
+    it && it.helpMessage,
+    err && err.message
+  ].join('|')).toUpperCase();
+  return /ALREADY_EXISTS|USER_EXISTS|EMAIL_EXISTS|ACCOUNT_EXISTS|已被注册|已经注册|已注册/.test(s);
+}
 /* 是否为可重试的瞬时性错误（网关抖动/超时/服务临时不可用等；含 gRPC 码 4/10/12/13/14） */
 function isTransientErr(err){
   if(!err) return false;
@@ -1527,6 +1542,10 @@ function sendAuthCode(){
     .catch(function(err){
       /* 默认线路不可达（code=unreachable）→ 真实切换备用线路并自动重发一次验证码 */
       if(tryAltOrigin(err)){ setTimeout(function(){ sendAuthCode(); }, 400); return; }
+      if(isAccountExistsErr(err)){
+        authMsg('该账号已注册', false);
+        return;
+      }
       /* v11.17：验证码发送失败统一短提示，不再展示云端长串文案；
          v11.18：完整错误输出到浏览器控制台（F12→Console），便于定位根因；
          v11.19：发送失败后按钮进入 10 秒冷却——云开发邮件服务限 10 封/分钟，
@@ -1854,6 +1873,10 @@ function doRegister(){
          v11.18：完整错误输出到浏览器控制台（F12→Console），便于定位根因 */
       tryAltOrigin(err);
       console.warn('注册失败（详情如下）', err);
+      if(isAccountExistsErr(err)){
+        authMsg('该账号已注册', false);
+        return;
+      }
       authMsg('注册失败', false);
     });
 }
